@@ -5,4 +5,5 @@ plugins {
     alias(libs.plugins.kotlin.compose) apply false
     alias(libs.plugins.hilt) apply false
     alias(libs.plugins.room) apply false
+    kotlin("plugin.serialization") version "1.9.23" apply false
 }
