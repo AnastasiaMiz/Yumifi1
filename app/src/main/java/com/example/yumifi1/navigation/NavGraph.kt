@@ -5,6 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.yumifi1.features.auth.ui.AuthView
+import com.example.yumifi1.features.recipes.ui.RecipesView
 import com.example.yumifi1.features.reg.ui.RegView
 import com.example.yumifi1.features.splash.SplashView
 
@@ -22,6 +23,9 @@ fun NavGraph(navController: NavHostController) {
         }
         composable(route = Screens.Reg.route) {
             RegView(navController = navController)
+        }
+        composable(route = Screens.Recipes.route) {
+            RecipesView(navController = navController)
         }
     }
 }

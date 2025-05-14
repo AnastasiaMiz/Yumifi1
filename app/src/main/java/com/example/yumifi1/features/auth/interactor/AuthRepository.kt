@@ -21,8 +21,7 @@ class AuthRepository @Inject constructor(
 
     suspend fun isAuthorized(): Boolean = withContext(Dispatchers.IO) {
         val userId = userSharedPreferences.getInt(USER_ID_KEY, UNDEFINED_USER_ID)
-//        return@withContext userId != UNDEFINED_USER_ID
-        return@withContext false
+        return@withContext userId != UNDEFINED_USER_ID
     }
 
     suspend fun login(
@@ -48,6 +47,12 @@ class AuthRepository @Inject constructor(
             putInt(USER_ID_KEY, existedUser.id)
         }
         return@withContext Result.success(Unit)
+    }
+
+    suspend fun logout() = withContext(Dispatchers.IO) {
+        userSharedPreferences.edit(commit = true) {
+            putInt(USER_ID_KEY, UNDEFINED_USER_ID)
+        }
     }
 
     suspend fun registration(
