@@ -1,0 +1,33 @@
+package com.example.yumifi1.features.interactor.di
+
+import android.content.Context
+import androidx.room.Room
+import com.example.yumifi1.features.auth.interactor.database.UserDao
+import com.example.yumifi1.features.interactor.database.YumifiDatabase
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
+
+@Module
+@InstallIn(SingletonComponent::class)
+class DatabaseModule {
+
+    @Provides
+    @Singleton
+    fun provideDatabase(
+        @ApplicationContext appContext: Context
+    ): YumifiDatabase = Room.databaseBuilder(
+        appContext,
+        YumifiDatabase::class.java,
+        YumifiDatabase.DATABASE_NAME
+    ).build()
+
+    @Provides
+    @Singleton
+    fun provideUserDao(
+        database: YumifiDatabase
+    ): UserDao = database.userDao()
+}

@@ -67,6 +67,7 @@ class AuthViewModel @Inject constructor(
                     )
                 )
             }
+            updateLoading(isLoading = false)
         }
     }
 

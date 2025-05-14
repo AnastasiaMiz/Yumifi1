@@ -13,7 +13,6 @@ hiltAndroid = "2.55"
 navigation = "2.9.0"
 ciol = "2.6.0"
 room = "2.7.1"
-kotlinSerialization = "1.6.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -42,8 +41,6 @@ coil = { group = "io.coil-kt", name = "coil-compose", version.ref = "ciol" }
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
-
-kotlin-serialization-json = { group = "kotlinx-serialization-json", name = "kotlinx-serialization-json", version.ref = "kotlinSerialization" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
