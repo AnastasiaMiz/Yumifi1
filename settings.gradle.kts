@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Yumifi"
+rootProject.name = "Yumifi1"
 include(":app")
  
