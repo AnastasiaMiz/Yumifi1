@@ -1,3 +1,28 @@
 <resources>
     <string name="app_name">Yumifi</string>
+
+    <!--  Общие строки  -->
+    <string name="email">Почта</string>
+    <string name="password">Пароль</string>
+
+    <!--  Строки экрана авторизации  -->
+    <string name="auth_title">Авторизация</string>
+    <string name="auth_email">@string/email</string>
+    <string name="auth_password">@string/password</string>
+    <string name="auth_login">Войти</string>
+    <string name="auth_registration">Зарегистрироваться</string>
+
+    <!--  Строки экрана регистрации  -->
+    <string name="reg_title">Регистрация</string>
+    <string name="reg_email">@string/email</string>
+    <string name="reg_password">@string/password</string>
+    <string name="reg_repeat_password">Повторите пароль</string>
+    <string name="reg_invalid_password">Пароли не совпадают</string>
+
+    <!--  Экран профиля  -->
+    <string name="profile_title">Профиль</string>
+    <string name="nickname">Никнейм</string>
+    <string name="set_nickname">Сохранить никнейм</string>
+    <string name="load_avatar">Загрузить аватар</string>
+    <string name="logout">Выйти</string>
 </resources>
