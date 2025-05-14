@@ -19,6 +19,9 @@
     <string name="reg_repeat_password">Повторите пароль</string>
     <string name="reg_invalid_password">Пароли не совпадают</string>
 
+    <!--  Строки экрана рецептов  -->
+    <string name="recipes_title">Рецепты</string>
+
     <!--  Экран профиля  -->
     <string name="profile_title">Профиль</string>
     <string name="nickname">Никнейм</string>
