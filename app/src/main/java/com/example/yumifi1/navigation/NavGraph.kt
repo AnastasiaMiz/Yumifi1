@@ -16,7 +16,6 @@ import com.example.yumifi1.features.splash.SplashView
 fun NavGraph(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    setBottomBarVisible: (Boolean) -> Unit,
 ) {
     /*
     Основной граф навигации
@@ -24,46 +23,43 @@ fun NavGraph(
     NavHost(
         modifier = modifier,
         navController = navController,
-        startDestination = Screen.Splash,
+        startDestination = Screen.Splash.route,
     ) {
-        composable<Screen.Splash> {
+        composable(route = Screen.Splash.route) {
             SplashView { nextView ->
-                navController.popBackStack(Screen.Splash, true)
-                navController.navigate(nextView)
+                navController.popBackStack(Screen.Splash.route, true)
+                navController.navigate(nextView.route)
             }
-            setBottomBarVisible(false)
         }
-        composable<Screen.Auth> {
+        composable(route = Screen.Auth.route) {
             AuthView { nextView ->
-                navController.popBackStack(Screen.Auth, true)
-                navController.navigate(nextView)
+                navController.popBackStack(Screen.Auth.route, true)
+                navController.navigate(nextView.route)
             }
-            setBottomBarVisible(false)
         }
-        composable<Screen.Reg> {
+        composable(route = Screen.Reg.route) {
             RegView { nextView ->
-                navController.popBackStack(Screen.Reg, true)
-                navController.navigate(nextView)
+                navController.popBackStack(Screen.Reg.route, true)
+                navController.navigate(nextView.route)
             }
-            setBottomBarVisible(false)
         }
         /*
         Подграф навигации, нужен для навигации внутри табов
          */
-        navigation<Screen.Home>(
-            startDestination = TabScreen.Recipes,
+        navigation(
+            route = Screen.Home.route,
+            startDestination = TabScreen.Recipes.route,
         ) {
-            composable<TabScreen.Recipes> {
+            composable(route = TabScreen.Recipes.route) {
                 RecipesView { nextView ->
                     if (nextView == Screen.Auth) {
-                        navController.navigate(nextView) {
-                            popUpTo(Screen.Home) {
+                        navController.navigate(nextView.route) {
+                            popUpTo(Screen.Home.route) {
                                 inclusive = true
                             }
                         }
                     }
                 }
-                setBottomBarVisible(true)
             }
         }
     }

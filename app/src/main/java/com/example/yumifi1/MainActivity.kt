@@ -23,6 +23,7 @@ import com.example.yumifi1.features.main.ui.components.BottomNavigationBar
 import com.example.yumifi1.navigation.NavGraph
 import com.example.yumifi1.navigation.Screen
 import com.example.yumifi1.navigation.TabScreen
+import com.example.yumifi1.navigation.TabScreen.Companion.isTabRoute
 import com.example.yumifi1.ui.theme.Yumifi1Theme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -43,15 +44,13 @@ class MainActivity : ComponentActivity() {
 private fun App() {
     val navController = rememberNavController()
 
-    var showBottomBar by remember { mutableStateOf(false) }
-
     val backStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = backStackEntry?.destination?.route ?: Screen.Splash
+    val currentRoute = backStackEntry?.destination?.route ?: Screen.Splash.route
 
     Scaffold(
         bottomBar = {
             AnimatedVisibility(
-                visible = showBottomBar,
+                visible = currentRoute.isTabRoute(),
                 enter = fadeIn(),
                 exit = fadeOut(),
             ) {
@@ -62,9 +61,7 @@ private fun App() {
         NavGraph(
             modifier = Modifier.padding(innerPadding),
             navController = navController,
-        ) { isBottomBarVisible ->
-            showBottomBar = isBottomBarVisible
-        }
+        )
     }
 }
 

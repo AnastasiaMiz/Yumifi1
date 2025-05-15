@@ -11,7 +11,7 @@ object BottomNavItems {
         BottomNavItem(
             labelRes = R.string.recipes,
             icon = Icons.AutoMirrored.Filled.List,
-            route = TabScreen.Recipes,
+            screen = TabScreen.Recipes,
         )
     )
 }

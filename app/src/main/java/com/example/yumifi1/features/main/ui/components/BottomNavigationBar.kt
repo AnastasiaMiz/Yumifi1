@@ -22,9 +22,9 @@ fun BottomNavigationBar(
         BottomNavItems.items.forEach { navItem ->
             val label = stringResource(id = navItem.labelRes)
             NavigationBarItem(
-                selected = currentRoute == navItem.route.toString(),
+                selected = currentRoute == navItem.screen.route,
                 onClick = {
-                    navController.navigate(navItem.route)
+                    navController.navigate(navItem.screen)
                 },
                 icon = {
                     Icon(
