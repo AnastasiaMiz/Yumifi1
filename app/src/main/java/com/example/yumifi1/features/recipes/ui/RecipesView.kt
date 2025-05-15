@@ -24,23 +24,21 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
+import com.example.yumifi1.R
 import com.example.yumifi1.features.recipes.ui.components.AddRecipeItemComponent
 import com.example.yumifi1.features.recipes.ui.components.RecipeItemComponent
 import com.example.yumifi1.features.recipes.ui.event.RecipesEvent
 import com.example.yumifi1.features.recipes.ui.model.Recipe
-import com.example.yumifi1.navigation.Screens
-import com.example.yumifi1.R
+import com.example.yumifi1.navigation.Screen
 
 @Composable
 fun RecipesView(
-    navController: NavController,
     recipesViewModel: RecipesViewModel = hiltViewModel(),
+    openView: (Screen) -> Unit,
 ) {
     val state by recipesViewModel.state.collectAsState()
 
@@ -50,27 +48,22 @@ fun RecipesView(
         recipesViewModel.event.collect { event ->
             when(event) {
                 is RecipesEvent.OpenAuthView -> {
-                    navController.popBackStack()
-                    navController.navigate(Screens.Auth.route)
+                    openView(Screen.Auth)
                 }
             }
         }
     }
 
-    Scaffold { contentPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(contentPadding)
-        ) {
-            ToolbarComponent(
-                onSearchClicked = {},
-                onLogoutClicked = recipesViewModel::onLogoutClicked
-            )
-            RecipesContentComponent(
-                recipes = state.recipes,
-            )
-        }
+    Column(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        ToolbarComponent(
+            onSearchClicked = {},
+            onLogoutClicked = recipesViewModel::onLogoutClicked
+        )
+        RecipesContentComponent(
+            recipes = state.recipes,
+        )
     }
 }
 
@@ -97,7 +90,7 @@ private fun ToolbarComponent(
             )
         }
         Text(
-            text = stringResource(id = R.string.recipes_title),
+            text = stringResource(id = R.string.recipes),
             fontSize = 18.sp,
             fontWeight = FontWeight.Medium,
         )

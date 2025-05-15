@@ -20,7 +20,9 @@
     <string name="reg_invalid_password">Пароли не совпадают</string>
 
     <!--  Строки экрана рецептов  -->
-    <string name="recipes_title">Рецепты</string>
+    <string name="recipes">Рецепты</string>
+    <string name="products">Продукты</string>
+    <string name="add_recipe">Добавить рецепт</string>
 
     <!--  Экран профиля  -->
     <string name="profile_title">Профиль</string>

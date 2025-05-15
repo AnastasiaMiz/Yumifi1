@@ -29,16 +29,15 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import com.example.yumifi1.R
 import com.example.yumifi1.features.auth.ui.event.AuthEvent
-import com.example.yumifi1.navigation.Screens
+import com.example.yumifi1.navigation.Screen
 import kotlinx.coroutines.launch
 
 @Composable
 fun AuthView(
-    navController: NavController,
     authViewModel: AuthViewModel = hiltViewModel(),
+    openView: (Screen) -> Unit,
 ) {
     val state by authViewModel.state.collectAsState()
 
@@ -56,87 +55,79 @@ fun AuthView(
                     }
                 }
                 is AuthEvent.OpenRecipesScreen -> {
-                    navController.navigate(Screens.Recipes.route)
+                    openView(Screen.Home)
                 }
             }
         }
     }
 
-    Scaffold(
-        snackbarHost = {
-            SnackbarHost(hostState = snackbarHostState)
-        }
-    ) { contentPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(contentPadding)
-                .padding(16.dp)
-        ) {
-            Text(
-                text = stringResource(id = R.string.auth_title),
-                fontSize = 20.sp
-            )
-            Spacer(modifier = Modifier.height(20.dp))
-            TextField(
-                value = state.email,
-                label = {
-                    Text(
-                        text = stringResource(id = R.string.auth_email)
-                    )
-                },
-                onValueChange = authViewModel::onEmailChanged,
-                enabled = !state.isLoading,
-                modifier = Modifier
-                    .fillMaxWidth()
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            TextField(
-                value = state.password,
-                label = {
-                    Text(
-                        text = stringResource(id = R.string.auth_password)
-                    )
-                },
-                onValueChange = authViewModel::onPasswordChanged,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                visualTransformation = PasswordVisualTransformation(),
-                enabled = !state.isLoading,
-                modifier = Modifier
-                    .fillMaxWidth()
-            )
-            Spacer(modifier = Modifier.weight(1f))
-            FilledTonalButton(
-                onClick = authViewModel::onLoginClicked,
-                enabled = !state.isLoading,
-                modifier = Modifier
-                    .fillMaxWidth()
-            ) {
-                if (state.isLoading) {
-                    CircularProgressIndicator(
-                        strokeWidth = 2.dp,
-                        modifier = Modifier
-                            .then(Modifier.size(16.dp))
-                    )
-                } else {
-                    Text(
-                        text = stringResource(id = R.string.auth_login)
-                    )
-                }
-            }
-            Spacer(modifier = Modifier.height(16.dp))
-            TextButton(
-                onClick = {
-                    navController.popBackStack(Screens.Auth.route, true)
-                    navController.navigate(Screens.Reg.route)
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-            ) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+        Text(
+            text = stringResource(id = R.string.auth_title),
+            fontSize = 20.sp
+        )
+        Spacer(modifier = Modifier.height(20.dp))
+        TextField(
+            value = state.email,
+            label = {
                 Text(
-                    text = stringResource(id = R.string.auth_registration)
+                    text = stringResource(id = R.string.auth_email)
+                )
+            },
+            onValueChange = authViewModel::onEmailChanged,
+            enabled = !state.isLoading,
+            modifier = Modifier
+                .fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        TextField(
+            value = state.password,
+            label = {
+                Text(
+                    text = stringResource(id = R.string.auth_password)
+                )
+            },
+            onValueChange = authViewModel::onPasswordChanged,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            visualTransformation = PasswordVisualTransformation(),
+            enabled = !state.isLoading,
+            modifier = Modifier
+                .fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.weight(1f))
+        FilledTonalButton(
+            onClick = authViewModel::onLoginClicked,
+            enabled = !state.isLoading,
+            modifier = Modifier
+                .fillMaxWidth()
+        ) {
+            if (state.isLoading) {
+                CircularProgressIndicator(
+                    strokeWidth = 2.dp,
+                    modifier = Modifier
+                        .then(Modifier.size(16.dp))
+                )
+            } else {
+                Text(
+                    text = stringResource(id = R.string.auth_login)
                 )
             }
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        TextButton(
+            onClick = {
+                openView(Screen.Reg)
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+        ) {
+            Text(
+                text = stringResource(id = R.string.auth_registration)
+            )
         }
     }
 }
