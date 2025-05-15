@@ -56,7 +56,10 @@ fun ProductsView(
         )
         ProductsContentComponent(
             products = state.products,
-        )
+        ) { productId ->
+            // TODO: передавать id в аргументах
+            openView(Screen.ProductDetails)
+        }
     }
 }
 
@@ -97,7 +100,8 @@ private fun ToolbarComponent(
 
 @Composable
 private fun ProductsContentComponent(
-    products: List<Product>
+    products: List<Product>,
+    openDetails: (Int?) -> Unit,
 ) {
     LazyColumn(
         modifier = Modifier
@@ -110,9 +114,7 @@ private fun ProductsContentComponent(
                 AddProductComponent(
                     modifier = Modifier
                         .clickable(
-                            onClick = {
-                                // TODO: открыть деталку товара
-                            }
+                            onClick = { openDetails(null) }
                         )
                 )
             }

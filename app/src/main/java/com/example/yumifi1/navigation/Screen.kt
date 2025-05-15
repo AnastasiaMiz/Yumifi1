@@ -26,6 +26,8 @@ sealed class Screen(val route: String) {
      * Экран с табами
      */
     data object Home : Screen("home")
+
+    data object ProductDetails : Screen("product_details")
 }
 
 sealed class TabScreen(route: String) : Screen(route) {

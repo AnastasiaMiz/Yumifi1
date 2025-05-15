@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.example.yumifi1.features.auth.ui.AuthView
+import com.example.yumifi1.features.product_details.ui.ProductDetailsView
 import com.example.yumifi1.features.products.ui.ProductsView
 import com.example.yumifi1.features.recipes.ui.RecipesView
 import com.example.yumifi1.features.reg.ui.RegView
@@ -41,6 +42,11 @@ fun NavGraph(
             RegView { nextView ->
                 navController.popBackStack(Screen.Reg.route, true)
                 navController.navigate(nextView.route)
+            }
+        }
+        composable(route = Screen.ProductDetails.route) {
+            ProductDetailsView {
+                navController.popBackStack()
             }
         }
         /*
