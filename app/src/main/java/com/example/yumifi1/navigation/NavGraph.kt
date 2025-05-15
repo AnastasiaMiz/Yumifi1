@@ -18,6 +18,9 @@ fun NavGraph(
     navController: NavHostController,
     setBottomBarVisible: (Boolean) -> Unit,
 ) {
+    /*
+    Основной граф навигации
+     */
     NavHost(
         modifier = modifier,
         navController = navController,
@@ -44,6 +47,9 @@ fun NavGraph(
             }
             setBottomBarVisible(false)
         }
+        /*
+        Подграф навигации, нужен для навигации внутри табов
+         */
         navigation<Screen.Home>(
             startDestination = TabScreen.Recipes,
         ) {
