@@ -1,5 +1,7 @@
 package com.example.yumifi1.features.recipes.ui.model
 
+import com.example.yumifi1.features.products.ui.model.Product
+
 data class Recipe(
     val name: String,
     val ingredients: List<Ingredient>

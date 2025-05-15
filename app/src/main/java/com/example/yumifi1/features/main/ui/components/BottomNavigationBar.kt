@@ -24,7 +24,7 @@ fun BottomNavigationBar(
             NavigationBarItem(
                 selected = currentRoute == navItem.screen.route,
                 onClick = {
-                    navController.navigate(navItem.screen)
+                    navController.navigate(navItem.screen.route)
                 },
                 icon = {
                     Icon(

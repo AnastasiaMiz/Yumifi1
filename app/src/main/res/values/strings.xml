@@ -24,6 +24,13 @@
     <string name="products">Продукты</string>
     <string name="add_recipe">Добавить рецепт</string>
 
+    <!--  Экран продуктов  -->
+    <string name="products_title">@string/products</string>
+    <string name="products_add_product">Добавить продукт</string>
+
+    <!--  Экран добавления продукта  -->
+    <string name="product_details_title">Продукт</string>
+
     <!--  Экран профиля  -->
     <string name="profile_title">Профиль</string>
     <string name="nickname">Никнейм</string>

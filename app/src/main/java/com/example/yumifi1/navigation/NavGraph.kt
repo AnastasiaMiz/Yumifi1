@@ -7,7 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.example.yumifi1.features.auth.ui.AuthView
-import com.example.yumifi1.features.main.ui.MainView
+import com.example.yumifi1.features.products.ui.ProductsView
 import com.example.yumifi1.features.recipes.ui.RecipesView
 import com.example.yumifi1.features.reg.ui.RegView
 import com.example.yumifi1.features.splash.SplashView
@@ -52,8 +52,19 @@ fun NavGraph(
         ) {
             composable(route = TabScreen.Recipes.route) {
                 RecipesView { nextView ->
-                    if (nextView == Screen.Auth) {
-                        navController.navigate(nextView.route) {
+                    navController.navigate(nextView.route) {
+                        if (nextView == Screen.Auth) {
+                            popUpTo(Screen.Home.route) {
+                                inclusive = true
+                            }
+                        }
+                    }
+                }
+            }
+            composable(route = TabScreen.Products.route) {
+                ProductsView { nextView ->
+                    navController.navigate(nextView.route) {
+                        if (nextView == Screen.Auth) {
                             popUpTo(Screen.Home.route) {
                                 inclusive = true
                             }

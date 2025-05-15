@@ -2,6 +2,7 @@ package com.example.yumifi1.features.main.ui.model
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
+import androidx.compose.material.icons.filled.ShoppingCart
 import com.example.yumifi1.R
 import com.example.yumifi1.navigation.Screen
 import com.example.yumifi1.navigation.TabScreen
@@ -10,8 +11,13 @@ object BottomNavItems {
     val items = listOf(
         BottomNavItem(
             labelRes = R.string.recipes,
-            icon = Icons.AutoMirrored.Filled.List,
+            icon = Icons.AutoMirrored.Default.List,
             screen = TabScreen.Recipes,
+        ),
+        BottomNavItem(
+            labelRes = R.string.products,
+            icon = Icons.Default.ShoppingCart,
+            screen = TabScreen.Products,
         )
     )
 }

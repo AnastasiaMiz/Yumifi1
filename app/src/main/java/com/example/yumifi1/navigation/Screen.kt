@@ -1,5 +1,6 @@
 package com.example.yumifi1.navigation
 
+import com.example.yumifi1.navigation.TabScreen.Companion.tabRoutes
 import kotlinx.serialization.Serializable
 
 /**
@@ -34,9 +35,15 @@ sealed class TabScreen(route: String) : Screen(route) {
      */
     data object Recipes : TabScreen("recipes")
 
+    /**
+     * Экран продуктов
+     */
+    data object Products : TabScreen("products")
+
     companion object {
         private val tabRoutes = listOf(
             Recipes.route,
+            Products.route,
         )
 
         fun String.isTabRoute(): Boolean = tabRoutes.contains(this)
