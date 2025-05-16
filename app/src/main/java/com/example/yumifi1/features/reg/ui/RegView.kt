@@ -10,8 +10,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilledTonalButton
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -33,7 +31,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.yumifi1.R
 import com.example.yumifi1.features.reg.ui.event.RegEvent
 import com.example.yumifi1.navigation.Screen
-import kotlinx.coroutines.launch
 
 @Composable
 fun RegView(
@@ -49,20 +46,6 @@ fun RegView(
     LaunchedEffect(Unit) {
         regViewModel.event.collect { event ->
             when(event) {
-                is RegEvent.ShowMessageRes -> {
-                    scope.launch {
-                        snackbarHostState.showSnackbar(
-                            message = content.getString(event.messageRes),
-                        )
-                    }
-                }
-                is RegEvent.ShowMessage -> {
-                    scope.launch {
-                        snackbarHostState.showSnackbar(
-                            message = event.message,
-                        )
-                    }
-                }
                 is RegEvent.OpenRecipesScreen -> {
                     openView(Screen.Home)
                 }

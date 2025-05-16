@@ -47,13 +47,6 @@ fun AuthView(
     LaunchedEffect(Unit) {
         authViewModel.event.collect { event ->
             when(event) {
-                is AuthEvent.ShowMessage -> {
-                    scope.launch {
-                        snackbarHostState.showSnackbar(
-                            message = event.message,
-                        )
-                    }
-                }
                 is AuthEvent.OpenRecipesScreen -> {
                     openView(Screen.Home)
                 }

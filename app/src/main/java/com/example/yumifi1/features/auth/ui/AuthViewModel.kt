@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.yumifi1.features.auth.interactor.AuthRepository
 import com.example.yumifi1.features.auth.ui.event.AuthEvent
+import com.example.yumifi1.message.MessageHandler
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,6 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AuthViewModel @Inject constructor(
     private val authRepository: AuthRepository,
+    private val messageHandler: MessageHandler,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(AuthState())
@@ -61,10 +63,8 @@ class AuthViewModel @Inject constructor(
                     AuthEvent.OpenRecipesScreen
                 )
             }.onFailure { error ->
-                _event.emit(
-                    AuthEvent.ShowMessage(
-                        message = "Ошибка авторизации: ${error.message}"
-                    )
+                messageHandler.sendMessage(
+                    message = "Ошибка авторизации: ${error.message}"
                 )
             }
             updateLoading(isLoading = false)

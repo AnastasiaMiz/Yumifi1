@@ -2,9 +2,9 @@ package com.example.yumifi1.features.reg.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.yumifi1.R
 import com.example.yumifi1.features.auth.interactor.AuthRepository
 import com.example.yumifi1.features.reg.ui.event.RegEvent
+import com.example.yumifi1.message.MessageHandler
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,6 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class RegViewModel @Inject constructor(
     private val authRepository: AuthRepository,
+    private val messageHandler: MessageHandler,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(RegState())
@@ -62,10 +63,8 @@ class RegViewModel @Inject constructor(
                     password = password
                 ).handleRegResult()
             } else {
-                _event.emit(
-                    RegEvent.ShowMessageRes(
-                        messageRes = R.string.reg_invalid_password
-                    )
+                messageHandler.sendMessage(
+                    message = "Пароли не совпадают"
                 )
                 updateLoading(isLoading = false)
             }
@@ -77,10 +76,8 @@ class RegViewModel @Inject constructor(
             _event.emit(RegEvent.OpenRecipesScreen)
         }
         .onFailure { error ->
-            _event.emit(
-                RegEvent.ShowMessage(
-                    message = "Ошибка регистрации: ${error.message}"
-                )
+            messageHandler.sendMessage(
+                message = "Ошибка регистрации: ${error.message}"
             )
         }
         updateLoading(isLoading = false)
