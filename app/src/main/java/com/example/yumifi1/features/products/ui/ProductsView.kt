@@ -3,8 +3,10 @@ package com.example.yumifi1.features.products.ui
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
@@ -28,6 +30,7 @@ import com.example.yumifi1.R
 import com.example.yumifi1.features.products.ui.components.AddProductComponent
 import com.example.yumifi1.features.products.ui.event.ProductsEvent
 import com.example.yumifi1.features.product_details.ui.model.Product
+import com.example.yumifi1.features.products.ui.components.ProductItemComponent
 import com.example.yumifi1.navigation.Screen
 
 @Composable
@@ -54,6 +57,7 @@ fun ProductsView(
         ToolbarComponent(
             onLogoutClicked = viewModel::onLogoutClicked
         )
+        Spacer(modifier = Modifier.height(16.dp))
         ProductsContentComponent(
             products = state.products,
         ) { productId ->
@@ -102,16 +106,26 @@ private fun ProductsContentComponent(
     products: List<Product>,
     openDetails: (Int?) -> Unit,
 ) {
-    LazyColumn(
-        modifier = Modifier
-            .padding(16.dp)
-    ) {
+    LazyColumn {
+        item {
+            AddProductComponent(
+                modifier = Modifier.padding(
+                    horizontal = 16.dp,
+                )
+            ) { openDetails(null) }
+        }
         items(
-            count = products.size + 1
+            count = products.size
         ) { index ->
             if (index == 0) {
-                AddProductComponent { openDetails(null) }
+                Spacer(modifier = Modifier.height(16.dp))
             }
+            ProductItemComponent(
+                product = products[index],
+                modifier = Modifier,
+                onItemClicked = { openDetails(products[index].id) },
+                onDeleteClicked = {}
+            )
         }
     }
 }

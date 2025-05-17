@@ -30,7 +30,7 @@ class ProductRepository @Inject constructor(
         val productEntity = ProductEntity(
             id = product.id,
             name = product.name,
-            unit = product.unit.value,
+            unit = product.unit.name,
             userOwnerId = authRepository.getCurrentUserId(),
         )
         productDao.insertProduct(productEntity)
