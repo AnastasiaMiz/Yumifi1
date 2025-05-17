@@ -1,6 +1,7 @@
 package com.example.yumifi1.features.product_details.interactor.database
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -28,4 +29,7 @@ interface ProductDao {
 
     @Query("SELECT * FROM $PRODUCTS_TABLE WHERE $USER_OWNER_ID = :userId")
     fun getProductsForUserFlow(userId: Int): Flow<List<ProductEntity>>
+
+    @Query("DELETE FROM $PRODUCTS_TABLE WHERE $PRODUCT_ID_COLUMN = :productId")
+    suspend fun deleteProduct(productId: Int)
 }

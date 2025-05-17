@@ -1,10 +1,10 @@
 package com.example.yumifi1.features.products.ui
 
-import androidx.compose.runtime.MutableState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.yumifi1.features.auth.interactor.AuthRepository
 import com.example.yumifi1.features.product_details.interactor.ProductRepository
+import com.example.yumifi1.features.product_details.ui.model.Product
 import com.example.yumifi1.features.products.ui.event.ProductsEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -47,6 +47,13 @@ class ProductsViewModel @Inject constructor(
         viewModelScope.launch {
             authRepository.logout()
             _event.emit(ProductsEvent.OpenAuthView)
+        }
+    }
+
+    fun onDeleteClicked(product: Product) {
+        val productId = product.id ?: return
+        viewModelScope.launch {
+            productRepository.deleteProduct(productId)
         }
     }
 }

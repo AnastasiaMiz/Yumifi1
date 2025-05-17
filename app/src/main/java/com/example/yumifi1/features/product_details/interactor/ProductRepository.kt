@@ -54,17 +54,25 @@ class ProductRepository @Inject constructor(
         Result.success(product)
     }
 
-    fun getProductsForUserFlow(
+    suspend fun getProductsForUserFlow(
         userId: Int
-    ): Flow<List<Product>> = productDao.getProductsForUserFlow(
-        userId = userId
-    ).map { products ->
-        products.map { productEntity ->
-            Product(
-                id = productEntity.id,
-                name = productEntity.name,
-                unit = ProductUnit.valueOf(productEntity.unit),
-            )
+    ): Flow<List<Product>> = withContext(Dispatchers.IO) {
+        productDao.getProductsForUserFlow(
+            userId = userId
+        ).map { products ->
+            products.map { productEntity ->
+                Product(
+                    id = productEntity.id,
+                    name = productEntity.name,
+                    unit = ProductUnit.valueOf(productEntity.unit),
+                )
+            }
         }
+    }
+
+    suspend fun deleteProduct(
+        productId: Int
+    ) = withContext(Dispatchers.IO) {
+        productDao.deleteProduct(productId = productId)
     }
 }

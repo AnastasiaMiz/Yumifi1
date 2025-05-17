@@ -1,6 +1,5 @@
 package com.example.yumifi1.features.products.ui
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -27,10 +26,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.yumifi1.R
-import com.example.yumifi1.features.products.ui.components.AddProductComponent
-import com.example.yumifi1.features.products.ui.event.ProductsEvent
 import com.example.yumifi1.features.product_details.ui.model.Product
+import com.example.yumifi1.features.products.ui.components.AddProductComponent
 import com.example.yumifi1.features.products.ui.components.ProductItemComponent
+import com.example.yumifi1.features.products.ui.event.ProductsEvent
 import com.example.yumifi1.navigation.Screen
 
 @Composable
@@ -60,9 +59,11 @@ fun ProductsView(
         Spacer(modifier = Modifier.height(16.dp))
         ProductsContentComponent(
             products = state.products,
-        ) { productId ->
-            openView(Screen.ProductDetails(productId))
-        }
+            openDetails = { productId ->
+                openView(Screen.ProductDetails(productId))
+            },
+            onDeleteClicked = viewModel::onDeleteClicked
+        )
     }
 }
 
@@ -105,6 +106,7 @@ private fun ToolbarComponent(
 private fun ProductsContentComponent(
     products: List<Product>,
     openDetails: (Int?) -> Unit,
+    onDeleteClicked: (Product) -> Unit,
 ) {
     LazyColumn {
         item {
@@ -124,7 +126,7 @@ private fun ProductsContentComponent(
                 product = products[index],
                 modifier = Modifier,
                 onItemClicked = { openDetails(products[index].id) },
-                onDeleteClicked = {}
+                onDeleteClicked = { onDeleteClicked(products[index]) }
             )
         }
     }
