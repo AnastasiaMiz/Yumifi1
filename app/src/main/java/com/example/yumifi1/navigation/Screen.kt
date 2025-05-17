@@ -1,8 +1,5 @@
 package com.example.yumifi1.navigation
 
-import com.example.yumifi1.navigation.TabScreen.Companion.tabRoutes
-import kotlinx.serialization.Serializable
-
 /**
  * Маршруты экрана
  */
@@ -27,7 +24,19 @@ sealed class Screen(val route: String) {
      */
     data object Home : Screen("home")
 
-    data object ProductDetails : Screen("product_details")
+    data class ProductDetails(
+        val productId: Int? = null
+    ) : Screen(
+        route = if (productId == null) {
+            "product_details"
+        } else {
+            "product_details?productId=$productId"
+        }
+    ) {
+        companion object {
+            fun getNavigationRoute(): String = "product_details?productId={productId}"
+        }
+    }
 }
 
 sealed class TabScreen(route: String) : Screen(route) {

@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.example.yumifi1.features.auth.interactor.database.UserDao
 import com.example.yumifi1.features.interactor.database.YumifiDatabase
+import com.example.yumifi1.features.product_details.interactor.database.ProductDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -28,6 +29,12 @@ class DatabaseModule {
     @Provides
     @Singleton
     fun provideUserDao(
-        database: YumifiDatabase
+        database: YumifiDatabase,
     ): UserDao = database.userDao()
+
+    @Provides
+    @Singleton
+    fun provideProductDao(
+        database: YumifiDatabase,
+    ): ProductDao = database.productDao()
 }

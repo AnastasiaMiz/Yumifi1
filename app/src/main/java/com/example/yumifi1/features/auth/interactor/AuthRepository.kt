@@ -19,8 +19,12 @@ class AuthRepository @Inject constructor(
 ) {
     private val messageDigest = MessageDigest.getInstance("SHA-256")
 
+    suspend fun getCurrentUserId(): Int = withContext(Dispatchers.IO) {
+        userSharedPreferences.getInt(USER_ID_KEY, UNDEFINED_USER_ID)
+    }
+
     suspend fun isAuthorized(): Boolean = withContext(Dispatchers.IO) {
-        val userId = userSharedPreferences.getInt(USER_ID_KEY, UNDEFINED_USER_ID)
+        val userId = getCurrentUserId()
         return@withContext userId != UNDEFINED_USER_ID
     }
 
@@ -72,7 +76,10 @@ class AuthRepository @Inject constructor(
         )
         userDao.insertUser(newUser)
 
-        return@withContext Result.success(Unit)
+        login(
+            email = email,
+            password = password,
+        )
     }
 
     private fun hashPassword(password: String): String {

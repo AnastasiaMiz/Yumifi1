@@ -1,4 +1,4 @@
-package com.example.yumifi1.features.products.ui.model
+package com.example.yumifi1.features.product_details.ui.model
 
 /**
  * Модель продукта
@@ -7,5 +7,6 @@ package com.example.yumifi1.features.products.ui.model
  */
 data class Product(
     val id: Int? = null,
-    val name: String = "",
+    val name: String,
+    val unit: ProductUnit,
 )

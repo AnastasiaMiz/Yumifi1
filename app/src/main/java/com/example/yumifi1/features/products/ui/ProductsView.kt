@@ -27,7 +27,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.yumifi1.R
 import com.example.yumifi1.features.products.ui.components.AddProductComponent
 import com.example.yumifi1.features.products.ui.event.ProductsEvent
-import com.example.yumifi1.features.products.ui.model.Product
+import com.example.yumifi1.features.product_details.ui.model.Product
 import com.example.yumifi1.navigation.Screen
 
 @Composable
@@ -57,8 +57,7 @@ fun ProductsView(
         ProductsContentComponent(
             products = state.products,
         ) { productId ->
-            // TODO: передавать id в аргументах
-            openView(Screen.ProductDetails)
+            openView(Screen.ProductDetails(productId))
         }
     }
 }
@@ -111,12 +110,7 @@ private fun ProductsContentComponent(
             count = products.size + 1
         ) { index ->
             if (index == 0) {
-                AddProductComponent(
-                    modifier = Modifier
-                        .clickable(
-                            onClick = { openDetails(null) }
-                        )
-                )
+                AddProductComponent { openDetails(null) }
             }
         }
     }

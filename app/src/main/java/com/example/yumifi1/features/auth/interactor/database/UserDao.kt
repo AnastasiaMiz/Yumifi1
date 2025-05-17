@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.yumifi1.features.auth.interactor.database.entity.USER_TABLE
 import com.example.yumifi1.features.auth.interactor.database.entity.UserEntity
+import com.example.yumifi1.features.auth.interactor.database.entity.UserEntity.Companion.USER_EMAIL_COLUMN
 
 @Dao
 interface UserDao {
@@ -16,6 +17,6 @@ interface UserDao {
     @Delete
     suspend fun deleteUser(user: UserEntity)
 
-    @Query("SELECT * FROM $USER_TABLE WHERE email = :email LIMIT 1")
+    @Query("SELECT * FROM $USER_TABLE WHERE $USER_EMAIL_COLUMN = :email LIMIT 1")
     suspend fun getByEmail(email: String): UserEntity?
 }

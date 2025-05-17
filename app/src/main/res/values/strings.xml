@@ -4,6 +4,7 @@
     <!--  Общие строки  -->
     <string name="email">Почта</string>
     <string name="password">Пароль</string>
+    <string name="save">Сохранить</string>
 
     <!--  Строки экрана авторизации  -->
     <string name="auth_title">Авторизация</string>
@@ -30,6 +31,8 @@
 
     <!--  Экран добавления продукта  -->
     <string name="product_details_title">Продукт</string>
+    <string name="product_name_label">Название продукта</string>
+    <string name="product_unit_label">Единица измерения</string>
 
     <!--  Экран профиля  -->
     <string name="profile_title">Профиль</string>

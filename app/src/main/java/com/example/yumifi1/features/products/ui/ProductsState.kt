@@ -1,6 +1,6 @@
 package com.example.yumifi1.features.products.ui
 
-import com.example.yumifi1.features.products.ui.model.Product
+import com.example.yumifi1.features.product_details.ui.model.Product
 
 data class ProductsState(
     val products: List<Product> = emptyList(),
