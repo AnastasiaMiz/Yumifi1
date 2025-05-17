@@ -42,8 +42,6 @@ fun RecipesView(
 ) {
     val state by recipesViewModel.state.collectAsState()
 
-    val scope = rememberCoroutineScope()
-
     LaunchedEffect(Unit) {
         recipesViewModel.event.collect { event ->
             when(event) {
@@ -63,6 +61,9 @@ fun RecipesView(
         )
         RecipesContentComponent(
             recipes = state.recipes,
+            onItemClicked = { recipeId ->
+                openView(Screen.RecipeDetails(recipeId))
+            }
         )
     }
 }
@@ -108,7 +109,8 @@ private fun ToolbarComponent(
 
 @Composable
 private fun RecipesContentComponent(
-    recipes: List<Recipe>
+    recipes: List<Recipe>,
+    onItemClicked: (Int?) -> Unit,
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
@@ -117,20 +119,16 @@ private fun RecipesContentComponent(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        items(
-            count = recipes.size + 1
-        ) { index ->
-            if (index == 0) {
-                AddRecipeItemComponent {
-                    // TODO: открыть экран создания рецепта
-                }
-            } else {
-                recipes.getOrNull(index)?.let { recipe ->
-                    RecipeItemComponent(
-                        recipe = recipe
-                    )
-                }
+        item {
+            AddRecipeItemComponent {
+                onItemClicked(null)
             }
+        }
+        items(count = recipes.size) { index ->
+            RecipeItemComponent(
+                recipe = recipes[index],
+                onItemClicked = { onItemClicked(recipes[index].id) }
+            )
         }
     }
 }

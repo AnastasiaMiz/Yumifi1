@@ -37,6 +37,20 @@ sealed class Screen(val route: String) {
             fun getNavigationRoute(): String = "product_details?productId={productId}"
         }
     }
+
+    data class RecipeDetails(
+        val recipeId: Int? = null,
+    ) : Screen(
+        route = if (recipeId == null) {
+            "recipe_details"
+        } else {
+            "recipe_details?recipeId=$recipeId"
+        }
+    ) {
+        companion object {
+            fun getNavigationRoute(): String = "recipe_details?recipeId={recipeId}"
+        }
+    }
 }
 
 sealed class TabScreen(route: String) : Screen(route) {

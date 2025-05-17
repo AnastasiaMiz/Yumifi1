@@ -13,6 +13,8 @@ import com.example.yumifi1.features.auth.ui.AuthView
 import com.example.yumifi1.features.product_details.ui.ProductDetailsView
 import com.example.yumifi1.features.product_details.ui.ProductDetailsViewModel
 import com.example.yumifi1.features.products.ui.ProductsView
+import com.example.yumifi1.features.recipe_details.ui.RecipeDetailsView
+import com.example.yumifi1.features.recipe_details.ui.RecipeDetailsViewModel
 import com.example.yumifi1.features.recipes.ui.RecipesView
 import com.example.yumifi1.features.reg.ui.RegView
 import com.example.yumifi1.features.splash.SplashView
@@ -58,13 +60,27 @@ fun NavGraph(
             route = Screen.ProductDetails.getNavigationRoute(),
             arguments = listOf(
                 navArgument("productId") {
-                    type= NavType.IntType
+                    type = NavType.IntType
                     defaultValue = -1
                 }
             ),
         ) { backStackEntry ->
             val viewModel: ProductDetailsViewModel = hiltViewModel(backStackEntry)
             ProductDetailsView(viewModel = viewModel) {
+                navController.popBackStack()
+            }
+        }
+        composable(
+            route = Screen.RecipeDetails.getNavigationRoute(),
+            arguments = listOf(
+                navArgument("recipeId") {
+                    type = NavType.IntType
+                    defaultValue = -1
+                }
+            ),
+        ) { backStackEntry ->
+            val viewModel: RecipeDetailsViewModel = hiltViewModel(backStackEntry)
+            RecipeDetailsView(viewModel = viewModel) {
                 navController.popBackStack()
             }
         }

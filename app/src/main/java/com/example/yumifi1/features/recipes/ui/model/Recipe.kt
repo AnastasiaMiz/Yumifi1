@@ -3,8 +3,9 @@ package com.example.yumifi1.features.recipes.ui.model
 import com.example.yumifi1.features.product_details.ui.model.Product
 
 data class Recipe(
-    val name: String,
-    val ingredients: List<Ingredient>
+    val id: Int? = null,
+    val name: String = "",
+    val ingredients: List<Ingredient> = emptyList()
 ) {
     data class Ingredient(
         val product: Product,

@@ -25,6 +25,9 @@
     <string name="products">Продукты</string>
     <string name="add_recipe">Добавить рецепт</string>
 
+    <!--  Экран добавления рецепта  -->
+    <string name="recipe_details_title">Рецепт</string>
+
     <!--  Экран продуктов  -->
     <string name="products_title">@string/products</string>
     <string name="products_add_product">Добавить продукт</string>

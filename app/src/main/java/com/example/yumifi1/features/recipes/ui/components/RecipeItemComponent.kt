@@ -1,12 +1,14 @@
 package com.example.yumifi1.features.recipes.ui.components
 
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -18,14 +20,12 @@ import com.example.yumifi1.features.recipes.ui.model.Recipe
 fun RecipeItemComponent(
     modifier: Modifier = Modifier,
     recipe: Recipe,
+    onItemClicked: () -> Unit,
 ) {
     Box(
         modifier = modifier
-            .border(
-                width = 1.dp,
-                color = Color.Gray,
-                shape = RoundedCornerShape(4.dp)
-            )
+            .clip(RoundedCornerShape(4.dp))
+            .clickable(onClick = onItemClicked),
     ) {
         Column {
             Text(
