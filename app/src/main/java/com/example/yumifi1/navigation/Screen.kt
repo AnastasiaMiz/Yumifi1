@@ -39,7 +39,7 @@ sealed class Screen(val route: String) {
     }
 
     data class RecipeDetails(
-        val recipeId: Int? = null,
+        val recipeId: Long? = null,
     ) : Screen(
         route = if (recipeId == null) {
             "recipe_details"

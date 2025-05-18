@@ -14,13 +14,11 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -32,7 +30,7 @@ import com.example.yumifi1.R
 import com.example.yumifi1.features.recipes.ui.components.AddRecipeItemComponent
 import com.example.yumifi1.features.recipes.ui.components.RecipeItemComponent
 import com.example.yumifi1.features.recipes.ui.event.RecipesEvent
-import com.example.yumifi1.features.recipes.ui.model.Recipe
+import com.example.yumifi1.features.recipe_details.ui.model.Recipe
 import com.example.yumifi1.navigation.Screen
 
 @Composable
@@ -110,7 +108,7 @@ private fun ToolbarComponent(
 @Composable
 private fun RecipesContentComponent(
     recipes: List<Recipe>,
-    onItemClicked: (Int?) -> Unit,
+    onItemClicked: (Long?) -> Unit,
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
