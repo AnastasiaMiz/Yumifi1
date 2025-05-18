@@ -60,7 +60,7 @@ fun NavGraph(
             route = Screen.ProductDetails.getNavigationRoute(),
             arguments = listOf(
                 navArgument("productId") {
-                    type = NavType.IntType
+                    type = NavType.LongType
                     defaultValue = -1
                 }
             ),
@@ -74,7 +74,7 @@ fun NavGraph(
             route = Screen.RecipeDetails.getNavigationRoute(),
             arguments = listOf(
                 navArgument("recipeId") {
-                    type = NavType.IntType
+                    type = NavType.LongType
                     defaultValue = -1
                 }
             ),

@@ -10,7 +10,7 @@ const val USER_TABLE = "users"
 data class UserEntity(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = USER_ID_COLUMN)
-    val id: Int? = null,
+    val id: Long? = null,
     @ColumnInfo(name = USER_EMAIL_COLUMN)
     val email: String,
     @ColumnInfo(name = USER_PASSWORD_COLUMN)

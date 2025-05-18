@@ -37,7 +37,7 @@ class ProductRepository @Inject constructor(
         Result.success(Unit)
     }
 
-    suspend fun getProduct(productId: Int): Result<Product> = withContext(Dispatchers.IO) {
+    suspend fun getProduct(productId: Long): Result<Product> = withContext(Dispatchers.IO) {
         val productEntity = productDao.getProductById(
             productId = productId
         )
@@ -55,7 +55,7 @@ class ProductRepository @Inject constructor(
     }
 
     suspend fun getProductsForUserFlow(
-        userId: Int
+        userId: Long
     ): Flow<List<Product>> = withContext(Dispatchers.IO) {
         productDao.getProductsForUserFlow(
             userId = userId
@@ -71,7 +71,7 @@ class ProductRepository @Inject constructor(
     }
 
     suspend fun deleteProduct(
-        productId: Int
+        productId: Long
     ) = withContext(Dispatchers.IO) {
         productDao.deleteProduct(productId = productId)
     }

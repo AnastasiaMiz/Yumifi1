@@ -12,7 +12,7 @@ import com.example.yumifi1.features.auth.interactor.database.entity.UserEntity.C
 @Dao
 interface UserDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertUser(user: UserEntity)
+    suspend fun insertUser(user: UserEntity): Long
 
     @Delete
     suspend fun deleteUser(user: UserEntity)

@@ -105,7 +105,7 @@ private fun ToolbarComponent(
 @Composable
 private fun ProductsContentComponent(
     products: List<Product>,
-    openDetails: (Int?) -> Unit,
+    openDetails: (Long?) -> Unit,
     onDeleteClicked: (Product) -> Unit,
 ) {
     LazyColumn {

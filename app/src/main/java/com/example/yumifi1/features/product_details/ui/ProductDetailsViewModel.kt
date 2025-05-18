@@ -32,7 +32,7 @@ class ProductDetailsViewModel @Inject constructor(
     val event: SharedFlow<ProductDetailsEvent> = _event.asSharedFlow()
 
     init {
-        val productId = savedStateHandle.get<Int>("productId")?.takeIf { it != -1 }
+        val productId = savedStateHandle.get<Long>("productId")?.takeIf { it != -1L }
         if (productId != null) {
             viewModelScope.launch {
                 updateLoading(isLoading = true)

@@ -19,8 +19,8 @@ class AuthRepository @Inject constructor(
 ) {
     private val messageDigest = MessageDigest.getInstance("SHA-256")
 
-    suspend fun getCurrentUserId(): Int = withContext(Dispatchers.IO) {
-        userSharedPreferences.getInt(USER_ID_KEY, UNDEFINED_USER_ID)
+    suspend fun getCurrentUserId(): Long = withContext(Dispatchers.IO) {
+        userSharedPreferences.getLong(USER_ID_KEY, UNDEFINED_USER_ID)
     }
 
     suspend fun isAuthorized(): Boolean = withContext(Dispatchers.IO) {
@@ -48,14 +48,14 @@ class AuthRepository @Inject constructor(
             )
         }
         userSharedPreferences.edit(commit = true) {
-            putInt(USER_ID_KEY, existedUser.id)
+            putLong(USER_ID_KEY, existedUser.id)
         }
         return@withContext Result.success(Unit)
     }
 
     suspend fun logout() = withContext(Dispatchers.IO) {
         userSharedPreferences.edit(commit = true) {
-            putInt(USER_ID_KEY, UNDEFINED_USER_ID)
+            putLong(USER_ID_KEY, UNDEFINED_USER_ID)
         }
     }
 
@@ -89,6 +89,6 @@ class AuthRepository @Inject constructor(
 
     private companion object {
         const val USER_ID_KEY = "USER_ID_KEY"
-        const val UNDEFINED_USER_ID = -1
+        const val UNDEFINED_USER_ID = -1L
     }
 }

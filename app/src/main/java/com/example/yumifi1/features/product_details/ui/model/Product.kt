@@ -6,7 +6,7 @@ package com.example.yumifi1.features.product_details.ui.model
  * @property name Название продукта
  */
 data class Product(
-    val id: Int? = null,
+    val id: Long? = null,
     val name: String,
     val unit: ProductUnit,
 )

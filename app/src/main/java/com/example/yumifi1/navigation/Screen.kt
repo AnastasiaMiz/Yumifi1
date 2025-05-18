@@ -25,7 +25,7 @@ sealed class Screen(val route: String) {
     data object Home : Screen("home")
 
     data class ProductDetails(
-        val productId: Int? = null
+        val productId: Long? = null
     ) : Screen(
         route = if (productId == null) {
             "product_details"
