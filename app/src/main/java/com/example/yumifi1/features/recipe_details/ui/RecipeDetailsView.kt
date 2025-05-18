@@ -37,11 +37,13 @@ import com.example.yumifi1.features.recipe_details.ui.components.RecipeDetailsTa
 import com.example.yumifi1.features.recipe_details.ui.components.RecipeIngredientsComponent
 import com.example.yumifi1.features.recipe_details.ui.data.RecipeDetailsTab
 import com.example.yumifi1.features.recipe_details.ui.event.RecipeDetailsEvent
+import com.example.yumifi1.navigation.Screen
 
 @Composable
 fun RecipeDetailsView(
     viewModel: RecipeDetailsViewModel = hiltViewModel(),
     back: () -> Unit,
+    openNextView: (Screen) -> Unit,
 ) {
     LaunchedEffect(Unit) {
         viewModel.event.collect { event ->
@@ -55,7 +57,10 @@ fun RecipeDetailsView(
         modifier = Modifier.fillMaxSize(),
     ) {
         ToolbarComponent { back() }
-        ContentComponent(viewModel)
+        ContentComponent(
+            viewModel = viewModel,
+            openNextView = openNextView,
+        )
     }
 }
 
@@ -91,10 +96,9 @@ private fun ToolbarComponent(
 @Composable
 private fun ContentComponent(
     viewModel: RecipeDetailsViewModel,
+    openNextView: (Screen) -> Unit,
 ) {
     val state by viewModel.state.collectAsState()
-
-    var currentTabType by remember { mutableStateOf(RecipeDetailsTab.DESCRIPTION) }
 
     Column(
         modifier = Modifier
@@ -121,11 +125,12 @@ private fun ContentComponent(
             ).forEach { (tabType, title) ->
                 RecipeDetailsTabComponent(
                     title = title,
-                    isSelected = currentTabType == tabType,
-                    modifier = Modifier.weight(1f)
-                ) {
-                    currentTabType = tabType
-                }
+                    isSelected = state.selectedTab == tabType,
+                    modifier = Modifier.weight(1f),
+                    onClicked = {
+                        viewModel.selectTab(tabType)
+                    }
+                )
             }
         }
         Box(
@@ -133,7 +138,7 @@ private fun ContentComponent(
                 .fillMaxWidth()
                 .weight(1f),
         ) {
-            when(currentTabType) {
+            when(state.selectedTab) {
                 RecipeDetailsTab.DESCRIPTION -> {
                     RecipeDescriptionComponent(
                         description = state.recipe.description,
@@ -145,7 +150,11 @@ private fun ContentComponent(
                 RecipeDetailsTab.INGREDIENTS -> {
                     RecipeIngredientsComponent(
                         modifier = Modifier.fillMaxWidth(),
-                        onAddIngredientClicked = viewModel::onAddIngredientClicked
+                        ingredients = state.recipe.ingredients,
+                        onAddIngredientClicked = {
+                            openNextView(Screen.AddIngredient)
+                        },
+                        onDeleteIngredientClicked = viewModel::onDeleteIngredientClicked,
                     )
                 }
             }

@@ -8,15 +8,32 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.yumifi1.features.recipes.ui.model.Recipe
 
 @Composable
 fun RecipeIngredientsComponent(
     modifier: Modifier = Modifier,
+    ingredients: List<Recipe.Ingredient>,
     onAddIngredientClicked: () -> Unit,
+    onDeleteIngredientClicked: (Recipe.Ingredient) -> Unit,
 ) {
     LazyColumn(modifier = modifier) {
         item {
             Spacer(modifier = Modifier.height(16.dp))
+        }
+        items(count = ingredients.size) { index ->
+            IngredientItemComponent(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                product = ingredients[index].product,
+                onDeleteClicked = {
+                    onDeleteIngredientClicked(ingredients[index])
+                },
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+        }
+        item {
             AddIngredientComponent(
                 modifier = Modifier
                     .padding(horizontal = 16.dp)

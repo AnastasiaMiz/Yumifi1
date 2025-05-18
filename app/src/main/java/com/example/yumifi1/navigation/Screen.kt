@@ -51,6 +51,8 @@ sealed class Screen(val route: String) {
             fun getNavigationRoute(): String = "recipe_details?recipeId={recipeId}"
         }
     }
+
+    data object AddIngredient : Screen("add_ingredient?isRoot=false")
 }
 
 sealed class TabScreen(route: String) : Screen(route) {

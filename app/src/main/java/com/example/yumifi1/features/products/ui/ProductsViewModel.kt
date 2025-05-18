@@ -1,11 +1,13 @@
 package com.example.yumifi1.features.products.ui
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.yumifi1.features.auth.interactor.AuthRepository
 import com.example.yumifi1.features.product_details.interactor.ProductRepository
 import com.example.yumifi1.features.product_details.ui.model.Product
 import com.example.yumifi1.features.products.ui.event.ProductsEvent
+import com.example.yumifi1.features.recipe_details.ui.handler.AddIngredientHandler
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,8 +21,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProductsViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val authRepository: AuthRepository,
     private val productRepository: ProductRepository,
+    private val addIngredientHandler: AddIngredientHandler,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(ProductsState())
@@ -28,6 +32,8 @@ class ProductsViewModel @Inject constructor(
 
     private val _event = MutableSharedFlow<ProductsEvent>()
     val event: SharedFlow<ProductsEvent> = _event.asSharedFlow()
+
+    private var isRoot: Boolean = true
 
     init {
         viewModelScope.launch {
@@ -41,6 +47,7 @@ class ProductsViewModel @Inject constructor(
                 }
             }
         }
+        isRoot = savedStateHandle.get<Boolean>("isRoot") == true
     }
 
     fun onLogoutClicked() {
@@ -54,6 +61,13 @@ class ProductsViewModel @Inject constructor(
         val productId = product.id ?: return
         viewModelScope.launch {
             productRepository.deleteProduct(productId)
+        }
+    }
+
+    fun onProductClicked(productId: Long?) {
+        if (productId == null) return
+        viewModelScope.launch {
+            addIngredientHandler.addProduct(productId)
         }
     }
 }

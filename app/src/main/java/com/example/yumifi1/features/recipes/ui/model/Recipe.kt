@@ -9,6 +9,7 @@ data class Recipe(
     val ingredients: List<Ingredient> = emptyList()
 ) {
     data class Ingredient(
+        val id: Long? = null,
         val product: Product,
         val quantity: Int,
     )

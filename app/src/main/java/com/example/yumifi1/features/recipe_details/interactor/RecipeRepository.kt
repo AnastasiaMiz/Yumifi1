@@ -36,6 +36,7 @@ class RecipeRepository @Inject constructor(
             val productId = ingredient.product.id
             if (productId != null) {
                 val ingredientEntity = IngredientEntity(
+                    id = ingredient.id,
                     productId = productId,
                     count = ingredient.quantity,
                     userOwnerId = userId,

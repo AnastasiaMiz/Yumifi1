@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -35,7 +36,8 @@ import com.example.yumifi1.navigation.Screen
 @Composable
 fun ProductsView(
     viewModel: ProductsViewModel = hiltViewModel(),
-    openView: (Screen) -> Unit,
+    isRoot: Boolean,
+    openView: (Screen?) -> Unit,
 ) {
     val state by viewModel.state.collectAsState()
 
@@ -54,13 +56,25 @@ fun ProductsView(
             .fillMaxSize(),
     ) {
         ToolbarComponent(
-            onLogoutClicked = viewModel::onLogoutClicked
+            isRoot = isRoot,
+            onAction = {
+                if (isRoot) {
+                    viewModel.onLogoutClicked()
+                } else {
+                    openView(null)
+                }
+            }
         )
         Spacer(modifier = Modifier.height(16.dp))
         ProductsContentComponent(
             products = state.products,
             openDetails = { productId ->
-                openView(Screen.ProductDetails(productId))
+                if (productId == null || isRoot) {
+                    openView(Screen.ProductDetails(productId))
+                } else {
+                    viewModel.onProductClicked(productId)
+                    openView(null)
+                }
             },
             onDeleteClicked = viewModel::onDeleteClicked
         )
@@ -69,7 +83,8 @@ fun ProductsView(
 
 @Composable
 private fun ToolbarComponent(
-    onLogoutClicked: () -> Unit
+    isRoot: Boolean,
+    onAction: () -> Unit,
 ) {
     Box(
         modifier = Modifier
@@ -77,6 +92,21 @@ private fun ToolbarComponent(
             .padding(horizontal = 16.dp)
             .padding(top = 16.dp)
     ) {
+        if (!isRoot) {
+            IconButton(
+                onClick = onAction,
+                modifier = Modifier
+                    .align(
+                        alignment = Alignment.CenterStart,
+                    )
+            ) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Default.ArrowBack,
+                    tint = MaterialTheme.colorScheme.primary,
+                    contentDescription = null,
+                )
+            }
+        }
         Text(
             text = stringResource(id = R.string.products),
             fontSize = 18.sp,
@@ -86,18 +116,20 @@ private fun ToolbarComponent(
                     alignment = Alignment.Center,
                 )
         )
-        IconButton(
-            onClick = onLogoutClicked,
-            modifier = Modifier
-                .align(
-                    alignment = Alignment.CenterEnd,
+        if (isRoot) {
+            IconButton(
+                onClick = onAction,
+                modifier = Modifier
+                    .align(
+                        alignment = Alignment.CenterEnd,
+                    )
+            ) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Default.ExitToApp,
+                    tint = MaterialTheme.colorScheme.primary,
+                    contentDescription = null,
                 )
-        ) {
-            Icon(
-                imageVector = Icons.AutoMirrored.Default.ExitToApp,
-                tint = MaterialTheme.colorScheme.primary,
-                contentDescription = null,
-            )
+            }
         }
     }
 }
