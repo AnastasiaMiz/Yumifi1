@@ -3,6 +3,12 @@ package com.example.yumifi1.features.recipes.ui.components
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,15 +28,27 @@ fun RecipeItemComponent(
 ) {
     Box(
         modifier = modifier
+            .aspectRatio(1f)
             .clip(RoundedCornerShape(4.dp))
             .clickable(onClick = onItemClicked),
     ) {
-        Column {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
+        ) {
             Text(
                 text = recipe.name,
-                fontSize = 16.sp,
+                fontSize = 20.sp,
                 fontWeight = FontWeight.Medium,
-                maxLines = 2,
+                maxLines = 3,
+                overflow = TextOverflow.Ellipsis,
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = recipe.description,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Normal,
                 overflow = TextOverflow.Ellipsis,
             )
         }

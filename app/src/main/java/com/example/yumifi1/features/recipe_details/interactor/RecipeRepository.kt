@@ -55,6 +55,18 @@ class RecipeRepository @Inject constructor(
         Result.success(Unit)
     }
 
+    fun getRecipes(userId: Long): Flow<List<Recipe>> = recipeDao.getRecipesForUser(userId)
+        .map { recipes ->
+            recipes.map { entity ->
+                Recipe(
+                    id = entity.id,
+                    name = entity.name,
+                    description = entity.description,
+                    ingredients = emptyList()
+                )
+            }
+        }
+
     @Transaction
     suspend fun deleteIngredients(ingredientsId: List<Long>) = withContext(Dispatchers.IO) {
         ingredientsId.forEach { id ->
