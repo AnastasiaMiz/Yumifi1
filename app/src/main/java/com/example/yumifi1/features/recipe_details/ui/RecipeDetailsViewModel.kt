@@ -115,7 +115,14 @@ class RecipeDetailsViewModel @Inject constructor(
     fun onDeleteIngredientClicked(ingredient: Ingredient) {
         _state.update { state ->
             val ingredients = state.recipe.ingredients.filter { existedIngredient ->
-                existedIngredient.product.id != ingredient.product.id
+                val needDelete = existedIngredient.product.id != ingredient.product.id
+                if (needDelete) {
+                    ingredientsForDelete = buildList {
+                        addAll(ingredientsForDelete)
+                        ingredient.id?.let(::add)
+                    }
+                }
+                needDelete
             }
             state.copy(
                 recipe = state.recipe.copy(
@@ -162,9 +169,12 @@ class RecipeDetailsViewModel @Inject constructor(
             return
         }
 
-        ingredientsForDelete = ingredients.filter { ingredient ->
-            ingredient.product.id !in productsId
-        }.mapNotNull { it.id }
+        ingredientsForDelete = buildList {
+            addAll(ingredientsForDelete)
+            ingredients.filter { ingredient ->
+                ingredient.product.id !in productsId
+            }.mapNotNull { it.id }.let(::addAll)
+        }
 
         _state.update { state ->
             val currentIngredients = state.recipe.ingredients
