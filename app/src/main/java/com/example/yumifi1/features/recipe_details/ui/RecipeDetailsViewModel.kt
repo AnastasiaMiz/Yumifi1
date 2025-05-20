@@ -13,6 +13,7 @@ import com.example.yumifi1.features.recipe_details.ui.handler.AddIngredientHandl
 import com.example.yumifi1.features.recipe_details.ui.model.Recipe.Ingredient
 import com.example.yumifi1.message.MessageHandler
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -44,6 +45,8 @@ class RecipeDetailsViewModel @Inject constructor(
 
     private var ingredientsForDelete: List<Long> = emptyList()
 
+    private var recipeJob: Job? = null
+
     init {
         addIngredientHandler.addProductIdFlow
             .onEach { productId ->
@@ -53,7 +56,7 @@ class RecipeDetailsViewModel @Inject constructor(
 
         val recipeId = savedStateHandle.get<Long>("recipeId")?.takeIf { it != -1L }
         if (recipeId != null) {
-            recipeRepository.getRecipeWithIngredients(recipeId)
+            recipeJob = recipeRepository.getRecipeWithIngredients(recipeId)
                 .onEach { recipe ->
                     _state.update { state ->
                         state.copy(
@@ -129,6 +132,15 @@ class RecipeDetailsViewModel @Inject constructor(
                     ingredients = ingredients,
                 )
             )
+        }
+    }
+
+    fun onDeleteClicked() {
+        val recipeId = state.value.recipe.id ?: return
+        recipeJob?.cancel()
+        recipeJob = null
+        viewModelScope.launch {
+            recipeRepository.deleteRecipe(recipeId)
         }
     }
 

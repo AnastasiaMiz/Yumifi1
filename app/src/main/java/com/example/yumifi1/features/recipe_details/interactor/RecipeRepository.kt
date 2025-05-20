@@ -93,6 +93,10 @@ class RecipeRepository @Inject constructor(
             }
         }
 
+    suspend fun deleteRecipe(recipeId: Long) = withContext(Dispatchers.IO) {
+        recipeDao.deleteRecipe(recipeId)
+    }
+
     @Transaction
     suspend fun deleteIngredients(ingredientsId: List<Long>) = withContext(Dispatchers.IO) {
         ingredientsId.forEach { id ->
