@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import androidx.room.Update
 import com.example.yumifi1.features.recipe_details.interactor.database.entity.RECIPES_TABLE
 import com.example.yumifi1.features.recipe_details.interactor.database.entity.RecipeEntity
 import com.example.yumifi1.features.recipe_details.interactor.database.entity.RecipeEntity.Companion.RECIPE_ID_COLUMN
@@ -19,6 +20,9 @@ interface RecipeDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insetRecipe(recipe: RecipeEntity): Long
 
+    @Update
+    suspend fun updateRecipe(recipe: RecipeEntity)
+
     @Query("DELETE FROM $RECIPES_TABLE WHERE $RECIPE_ID_COLUMN = :recipeId")
     suspend fun deleteRecipe(recipeId: Long)
 
@@ -30,6 +34,6 @@ interface RecipeDao {
     fun getRecipeWithIngredients(recipeId: Long): Flow<RecipeWithIngredients>
 
     @Transaction
-    @Query("SELECT * FROM $RECIPES_TABLE WHERE $RECIPE_ID_COLUMN = :recipeId")
-    fun getRecipesWithIngredients(recipeId: Long): Flow<List<RecipeWithIngredients>>
+    @Query("SELECT * FROM $RECIPES_TABLE WHERE $RECIPE_USER_OWNER_ID = :userId")
+    fun getRecipesWithIngredients(userId: Long): Flow<List<RecipeWithIngredients>>
 }

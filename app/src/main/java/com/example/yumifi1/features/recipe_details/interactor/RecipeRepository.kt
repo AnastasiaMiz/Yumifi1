@@ -33,11 +33,17 @@ class RecipeRepository @Inject constructor(
     ): Result<Unit> = withContext(Dispatchers.IO) {
         val userId = authRepository.getCurrentUserId()
         val recipeEntity = RecipeEntity(
+            id = recipe.id,
             name = recipe.name,
             description = recipe.description,
             userOwnerId = userId,
         )
-        val recipeId = recipeDao.insetRecipe(recipeEntity)
+        val recipeId = if (recipeEntity.id == null) {
+            recipeDao.insetRecipe(recipeEntity)
+        } else {
+            recipeDao.updateRecipe(recipeEntity)
+            recipeEntity.id
+        }
 
         recipe.ingredients.forEach { ingredient ->
             val productId = ingredient.product.id
@@ -49,7 +55,11 @@ class RecipeRepository @Inject constructor(
                     userOwnerId = userId,
                     recipeId = recipeId,
                 )
-                ingredientDao.insertIngredient(ingredientEntity)
+                if (ingredientEntity.id == null) {
+                    ingredientDao.insertIngredient(ingredientEntity)
+                } else {
+                    ingredientDao.updateIngredient(ingredientEntity)
+                }
             }
         }
         Result.success(Unit)
