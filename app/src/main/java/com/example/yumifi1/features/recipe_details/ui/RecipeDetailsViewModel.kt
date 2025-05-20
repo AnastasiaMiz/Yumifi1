@@ -54,10 +54,10 @@ class RecipeDetailsViewModel @Inject constructor(
         val recipeId = savedStateHandle.get<Long>("recipeId")?.takeIf { it != -1L }
         if (recipeId != null) {
             recipeRepository.getRecipeWithIngredients(recipeId)
-                .onEach { recipe ->
+                .onEach { recipes ->
                     _state.update { state ->
                         state.copy(
-                            recipe = recipe,
+                            recipe = recipes,
                         )
                     }
                 }

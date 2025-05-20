@@ -55,14 +55,30 @@ class RecipeRepository @Inject constructor(
         Result.success(Unit)
     }
 
-    fun getRecipes(userId: Long): Flow<List<Recipe>> = recipeDao.getRecipesForUser(userId)
-        .map { recipes ->
-            recipes.map { entity ->
+    @Transaction
+    fun getRecipes(userId: Long): Flow<List<Recipe>> = recipeDao.getRecipesWithIngredients(userId)
+        .map { recipesWithIngredients ->
+            recipesWithIngredients.map { entity ->
                 Recipe(
-                    id = entity.id,
-                    name = entity.name,
-                    description = entity.description,
-                    ingredients = emptyList()
+                    id = entity.recipe.id,
+                    name = entity.recipe.name,
+                    description = entity.recipe.description,
+                    ingredients = entity.ingredients.mapNotNull { entity ->
+                        val productEntity = productDao.getProductById(entity.productId)
+                        if (productEntity != null) {
+                            Recipe.Ingredient(
+                                id = entity.id,
+                                product = Product(
+                                    id = productEntity.id,
+                                    name = productEntity.name,
+                                    unit = ProductUnit.valueOf(productEntity.unit),
+                                ),
+                                quantity = 1,
+                            )
+                        } else {
+                            null
+                        }
+                    },
                 )
             }
         }

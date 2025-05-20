@@ -28,4 +28,8 @@ interface RecipeDao {
     @Transaction
     @Query("SELECT * FROM $RECIPES_TABLE WHERE $RECIPE_ID_COLUMN = :recipeId")
     fun getRecipeWithIngredients(recipeId: Long): Flow<RecipeWithIngredients>
+
+    @Transaction
+    @Query("SELECT * FROM $RECIPES_TABLE WHERE $RECIPE_ID_COLUMN = :recipeId")
+    fun getRecipesWithIngredients(recipeId: Long): Flow<List<RecipeWithIngredients>>
 }
