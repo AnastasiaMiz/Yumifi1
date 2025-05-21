@@ -47,10 +47,9 @@ interface RecipeDao {
     @Query("""
         SELECT DISTINCT r.* FROM $RECIPES_TABLE AS r
         JOIN $INGREDIENTS_TABLE AS i ON r.$RECIPE_ID_COLUMN = i.$INGREDIENT_RECIPE_ID
-        WHERE r.$RECIPE_USER_OWNER_ID = :userId AND i.$INGREDIENT_PRODUCT_ID_COLUMN IN (:productsId)
+        WHERE i.$INGREDIENT_PRODUCT_ID_COLUMN IN (:productsId)
     """)
     fun getRecipesWithIngredients(
-        userId: Long,
         productsId: List<Long>
     ): Flow<List<RecipeWithIngredients>>
 }

@@ -99,11 +99,9 @@ class RecipeRepository @Inject constructor(
         }
 
     suspend fun getRecipes(
-        userId: Long,
         productsId: List<Long>
     ) = withContext(Dispatchers.IO) {
         recipeDao.getRecipesWithIngredients(
-            userId = userId,
             productsId = productsId,
         ).map { recipesWithIngredients ->
             recipesWithIngredients.map { entity ->

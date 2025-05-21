@@ -30,28 +30,27 @@ class SearchViewModel @Inject constructor(
     private var searchJob: Job? = null
 
     init {
+        state.onEach { value ->
+            val productsId = value.products
+                .filter { it.isSelected }
+                .mapNotNull { it.product.id }
+            val recipesFlow = recipeRepository.getRecipes(
+                productsId = productsId,
+            )
+            searchJob?.cancel()
+            searchJob = recipesFlow.onEach { recipes ->
+                _state.update { state ->
+                    state.copy(
+                        recipes = recipes,
+                    )
+                }
+            }.launchIn(viewModelScope)
+        }.launchIn(viewModelScope)
         viewModelScope.launch {
             val userId = authRepository.getCurrentUserId()
-            state.onEach { value ->
-                val productsId = value.products
-                    .filter { it.isSelected }
-                    .mapNotNull { it.product.id }
-                val recipesFlow = recipeRepository.getRecipes(
-                    userId = userId,
-                    productsId = productsId,
-                )
-                searchJob?.cancel()
-                searchJob = recipesFlow.onEach { recipes ->
-                    _state.update { state ->
-                        state.copy(
-                            recipes = recipes,
-                        )
-                    }
-                }.launchIn(viewModelScope)
-            }.launchIn(viewModelScope)
             productRepository.getProductsForUserFlow(
                 userId = userId
-            ).onEach { products ->
+            ).collect { products ->
                 _state.update { state ->
                     state.copy(
                         products = products.map { product ->
@@ -59,7 +58,7 @@ class SearchViewModel @Inject constructor(
                         }
                     )
                 }
-            }.launchIn(viewModelScope)
+            }
         }
     }
 
