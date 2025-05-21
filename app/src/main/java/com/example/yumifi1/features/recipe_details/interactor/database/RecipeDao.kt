@@ -29,6 +29,9 @@ interface RecipeDao {
     @Query("DELETE FROM $RECIPES_TABLE WHERE $RECIPE_ID_COLUMN = :recipeId")
     suspend fun deleteRecipe(recipeId: Long)
 
+    @Query("SELECT * FROM $RECIPES_TABLE")
+    fun getAllRecipes(): Flow<List<RecipeWithIngredients>>
+
     @Query("SELECT * FROM $RECIPES_TABLE WHERE $RECIPE_USER_OWNER_ID = :userId")
     fun getRecipesForUser(userId: Long): Flow<List<RecipeEntity>>
 

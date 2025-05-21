@@ -67,6 +67,11 @@ class RecipeRepository @Inject constructor(
     }
 
     @Transaction
+    fun getAllRecipes(): Flow<List<Recipe>> = recipeDao.getAllRecipes().map { recipes ->
+        recipes.map { entity -> entity.mapToDomain() }
+    }
+
+    @Transaction
     fun getRecipes(userId: Long): Flow<List<Recipe>> = recipeDao.getRecipesWithIngredients(userId)
         .map { recipesWithIngredients ->
             recipesWithIngredients.map { entity ->

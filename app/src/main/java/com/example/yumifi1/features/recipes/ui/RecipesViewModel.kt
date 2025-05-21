@@ -12,6 +12,8 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -29,17 +31,15 @@ class RecipesViewModel @Inject constructor(
     val event: SharedFlow<RecipesEvent> = _event.asSharedFlow()
 
     init {
-        viewModelScope.launch {
-            val userId = authRepository.getCurrentUserId()
-            recipeRepository.getRecipes(userId)
-                .collect { recipes ->
-                    _state.update { state ->
-                        state.copy(
-                            recipes = recipes,
-                        )
-                    }
+        recipeRepository.getAllRecipes()
+            .onEach { recipes ->
+                _state.update { state ->
+                    state.copy(
+                        recipes = recipes,
+                    )
                 }
-        }
+            }
+            .launchIn(viewModelScope)
     }
 
     fun onLogoutClicked() {
