@@ -53,6 +53,8 @@ sealed class Screen(val route: String) {
     }
 
     data object AddIngredient : Screen("add_ingredient?isRoot=false")
+
+    data object Search : Screen("search")
 }
 
 sealed class TabScreen(route: String) : Screen(route) {

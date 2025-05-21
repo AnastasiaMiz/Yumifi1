@@ -10,6 +10,7 @@ import com.example.yumifi1.features.recipe_details.interactor.database.Ingredien
 import com.example.yumifi1.features.recipe_details.interactor.database.RecipeDao
 import com.example.yumifi1.features.recipe_details.interactor.database.entity.IngredientEntity
 import com.example.yumifi1.features.recipe_details.interactor.database.entity.RecipeEntity
+import com.example.yumifi1.features.recipe_details.interactor.database.entity.RecipeWithIngredients
 import com.example.yumifi1.features.recipe_details.ui.model.Recipe
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -69,27 +70,7 @@ class RecipeRepository @Inject constructor(
     fun getRecipes(userId: Long): Flow<List<Recipe>> = recipeDao.getRecipesWithIngredients(userId)
         .map { recipesWithIngredients ->
             recipesWithIngredients.map { entity ->
-                Recipe(
-                    id = entity.recipe.id,
-                    name = entity.recipe.name,
-                    description = entity.recipe.description,
-                    ingredients = entity.ingredients.mapNotNull { entity ->
-                        val productEntity = productDao.getProductById(entity.productId)
-                        if (productEntity != null) {
-                            Recipe.Ingredient(
-                                id = entity.id,
-                                product = Product(
-                                    id = productEntity.id,
-                                    name = productEntity.name,
-                                    unit = ProductUnit.valueOf(productEntity.unit),
-                                ),
-                                quantity = 1,
-                            )
-                        } else {
-                            null
-                        }
-                    },
-                )
+                entity.mapToDomain()
             }
         }
 
@@ -109,26 +90,43 @@ class RecipeRepository @Inject constructor(
         recipeId: Long
     ): Flow<Recipe> = recipeDao.getRecipeWithIngredients(recipeId)
         .map { recipeWithIngredients ->
-            Recipe(
-                id = recipeWithIngredients.recipe.id,
-                name = recipeWithIngredients.recipe.name,
-                description = recipeWithIngredients.recipe.description,
-                ingredients = recipeWithIngredients.ingredients.mapNotNull { entity ->
-                    val productEntity = productDao.getProductById(entity.productId)
-                    if (productEntity != null) {
-                        Recipe.Ingredient(
-                            id = entity.id,
-                            product = Product(
-                                id = productEntity.id,
-                                name = productEntity.name,
-                                unit = ProductUnit.valueOf(productEntity.unit),
-                            ),
-                            quantity = 1,
-                        )
-                    } else {
-                        null
-                    }
-                },
-            )
+            recipeWithIngredients.mapToDomain()
         }
+
+    suspend fun getRecipes(
+        userId: Long,
+        productsId: List<Long>
+    ) = withContext(Dispatchers.IO) {
+        recipeDao.getRecipesWithIngredients(
+            userId = userId,
+            productsId = productsId,
+        ).map { recipesWithIngredients ->
+            recipesWithIngredients.map { entity ->
+                entity.mapToDomain()
+            }
+        }
+    }
+
+    private suspend fun RecipeWithIngredients.mapToDomain(): Recipe =
+        Recipe(
+            id = recipe.id,
+            name = recipe.name,
+            description = recipe.description,
+            ingredients = ingredients.mapNotNull { entity ->
+                val productEntity = productDao.getProductById(entity.productId)
+                if (productEntity != null) {
+                    Recipe.Ingredient(
+                        id = entity.id,
+                        product = Product(
+                            id = productEntity.id,
+                            name = productEntity.name,
+                            unit = ProductUnit.valueOf(productEntity.unit),
+                        ),
+                        quantity = 1,
+                    )
+                } else {
+                    null
+                }
+            },
+        )
 }

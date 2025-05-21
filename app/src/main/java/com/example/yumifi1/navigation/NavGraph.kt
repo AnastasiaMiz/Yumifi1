@@ -18,6 +18,7 @@ import com.example.yumifi1.features.recipe_details.ui.RecipeDetailsView
 import com.example.yumifi1.features.recipe_details.ui.RecipeDetailsViewModel
 import com.example.yumifi1.features.recipes.ui.RecipesView
 import com.example.yumifi1.features.reg.ui.RegView
+import com.example.yumifi1.features.search.ui.SearchView
 import com.example.yumifi1.features.splash.SplashView
 import kotlinx.coroutines.flow.MutableSharedFlow
 
@@ -112,6 +113,24 @@ fun NavGraph(
                     navController.popBackStack()
                 } else {
                     navController.navigate(nextView.route) {
+                        launchSingleTop = true
+                    }
+                }
+            }
+        }
+        composable(
+            route = Screen.Search.route
+        ) {
+            SearchView { nextView ->
+                if (nextView == null) {
+                    navController.popBackStack()
+                } else {
+                    navController.navigate(nextView.route) {
+                        if (nextView == Screen.Auth) {
+                            popUpTo(Screen.Home.route) {
+                                inclusive = true
+                            }
+                        }
                         launchSingleTop = true
                     }
                 }

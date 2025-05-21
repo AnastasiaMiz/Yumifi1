@@ -49,4 +49,7 @@
     <string name="set_nickname">Сохранить никнейм</string>
     <string name="load_avatar">Загрузить аватар</string>
     <string name="logout">Выйти</string>
+
+    <!--  Экран поиска  -->
+    <string name="search_title">Поиск</string>
 </resources>

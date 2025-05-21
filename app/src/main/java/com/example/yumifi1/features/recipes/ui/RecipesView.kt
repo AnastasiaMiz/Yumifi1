@@ -54,7 +54,7 @@ fun RecipesView(
         modifier = Modifier.fillMaxSize()
     ) {
         ToolbarComponent(
-            onSearchClicked = {},
+            onSearchClicked = { openView(Screen.Search) },
             onLogoutClicked = recipesViewModel::onLogoutClicked
         )
         RecipesContentComponent(
