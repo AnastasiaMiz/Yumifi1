@@ -30,6 +30,7 @@
     <string name="recipe_details_title">Рецепт</string>
     <string name="recipe_description_tab_title">Описание</string>
     <string name="recipe_ingredients_tab_title">Ингредиенты</string>
+    <string name="recipe_comments_tab_title">Комментарии</string>
     <string name="recipe_name_label">Название рецепта</string>
     <string name="recipe_description_label">Описание</string>
     <string name="recipe_add_ingredient">Добавить ингредиент</string>

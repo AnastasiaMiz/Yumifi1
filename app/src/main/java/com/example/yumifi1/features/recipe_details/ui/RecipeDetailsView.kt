@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -16,29 +17,27 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.yumifi1.R
 import com.example.yumifi1.features.recipe_details.ui.components.RecipeDescriptionComponent
-import com.example.yumifi1.features.recipe_details.ui.components.RecipeDetailsTabComponent
 import com.example.yumifi1.features.recipe_details.ui.components.RecipeIngredientsComponent
 import com.example.yumifi1.features.recipe_details.ui.data.RecipeDetailsTab
+import com.example.yumifi1.features.recipe_details.ui.data.RecipeTabsItems
 import com.example.yumifi1.features.recipe_details.ui.event.RecipeDetailsEvent
 import com.example.yumifi1.navigation.Screen
 
@@ -146,17 +145,28 @@ private fun ContentComponent(
                 .fillMaxWidth(),
         )
         Spacer(modifier = Modifier.height(16.dp))
-        Row(modifier = Modifier.fillMaxWidth()) {
-            listOf(
-                RecipeDetailsTab.DESCRIPTION to stringResource(id = R.string.recipe_description_tab_title),
-                RecipeDetailsTab.INGREDIENTS to stringResource(id = R.string.recipe_ingredients_tab_title),
-            ).forEach { (tabType, title) ->
-                RecipeDetailsTabComponent(
-                    title = title,
-                    isSelected = state.selectedTab == tabType,
-                    modifier = Modifier.weight(1f),
-                    onClicked = {
-                        viewModel.selectTab(tabType)
+        NavigationBar(
+            containerColor = MaterialTheme.colorScheme.background,
+            windowInsets = WindowInsets(
+                left = 0,
+                right = 0,
+                top = 0,
+                bottom = 0,
+            ),
+        ) {
+            RecipeTabsItems.items.forEach { item ->
+                val label = stringResource(item.labelRes)
+                NavigationBarItem(
+                    selected = state.selectedTab == item.type,
+                    onClick = { viewModel.selectTab(item.type) },
+                    icon = {
+                        Icon(
+                            imageVector = item.icon,
+                            contentDescription = label,
+                        )
+                    },
+                    label = {
+                        Text(text = label)
                     }
                 )
             }
@@ -184,6 +194,9 @@ private fun ContentComponent(
                         },
                         onDeleteIngredientClicked = viewModel::onDeleteIngredientClicked,
                     )
+                }
+                RecipeDetailsTab.COMMENTS -> {
+                    // TODO: Компонент комментариев
                 }
             }
         }
