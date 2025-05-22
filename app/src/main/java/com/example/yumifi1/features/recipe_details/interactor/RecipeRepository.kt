@@ -2,8 +2,9 @@ package com.example.yumifi1.features.recipe_details.interactor
 
 import androidx.room.Transaction
 import com.example.yumifi1.features.auth.interactor.AuthRepository
-import com.example.yumifi1.features.product_details.interactor.ProductRepository
+import com.example.yumifi1.features.comment.interactor.database.entity.mapToDomain
 import com.example.yumifi1.features.product_details.interactor.database.ProductDao
+import com.example.yumifi1.features.product_details.interactor.database.entity.ProductEntity
 import com.example.yumifi1.features.product_details.ui.model.Product
 import com.example.yumifi1.features.product_details.ui.model.ProductUnit
 import com.example.yumifi1.features.recipe_details.interactor.database.IngredientDao
@@ -23,7 +24,6 @@ import javax.inject.Singleton
 class RecipeRepository @Inject constructor(
     private val recipeDao: RecipeDao,
     private val ingredientDao: IngredientDao,
-//    private val recipeIngredientsCrossRefDao: RecipeIngredientsCrossRefDao,
     private val authRepository: AuthRepository,
     private val productDao: ProductDao,
 ) {
@@ -118,18 +118,25 @@ class RecipeRepository @Inject constructor(
             ingredients = ingredients.mapNotNull { entity ->
                 val productEntity = productDao.getProductById(entity.productId)
                 if (productEntity != null) {
-                    Recipe.Ingredient(
-                        id = entity.id,
-                        product = Product(
-                            id = productEntity.id,
-                            name = productEntity.name,
-                            unit = ProductUnit.valueOf(productEntity.unit),
-                        ),
-                        quantity = 1,
-                    )
+                    entity.mapToDomain(product = productEntity)
                 } else {
                     null
                 }
             },
+            comments = comments.map { entity ->
+                entity.mapToDomain()
+            }
         )
+
+    private fun IngredientEntity.mapToDomain(
+        product: ProductEntity,
+    ): Recipe.Ingredient = Recipe.Ingredient(
+        id = id,
+        product = Product(
+            id = product.id,
+            name = product.name,
+            unit = ProductUnit.valueOf(product.unit),
+        ),
+        quantity = 1,
+    )
 }

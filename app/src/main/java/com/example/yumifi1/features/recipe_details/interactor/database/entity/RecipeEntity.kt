@@ -10,7 +10,8 @@ import androidx.room.Junction
 import androidx.room.PrimaryKey
 import androidx.room.Relation
 import com.example.yumifi1.features.auth.interactor.database.entity.UserEntity
-import com.example.yumifi1.features.recipe_details.interactor.database.entity.IngredientEntity.Companion.INGREDIENT_ID_COLUMN
+import com.example.yumifi1.features.comment.interactor.database.entity.CommentEntity
+import com.example.yumifi1.features.comment.interactor.database.entity.CommentEntity.Companion.COMMENT_RECIPE_OWNER
 import com.example.yumifi1.features.recipe_details.interactor.database.entity.IngredientEntity.Companion.INGREDIENT_RECIPE_ID
 import com.example.yumifi1.features.recipe_details.interactor.database.entity.RecipeEntity.Companion.RECIPE_ID_COLUMN
 import com.example.yumifi1.features.recipe_details.interactor.database.entity.RecipeEntity.Companion.RECIPE_USER_OWNER_ID
@@ -98,4 +99,9 @@ data class RecipeWithIngredients(
         entityColumn = INGREDIENT_RECIPE_ID,
     )
     val ingredients: List<IngredientEntity>,
+    @Relation(
+        parentColumn = RECIPE_ID_COLUMN,
+        entityColumn = COMMENT_RECIPE_OWNER
+    )
+    val comments: List<CommentEntity>
 )

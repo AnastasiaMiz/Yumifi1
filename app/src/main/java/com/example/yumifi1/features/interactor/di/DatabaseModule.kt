@@ -3,6 +3,7 @@ package com.example.yumifi1.features.interactor.di
 import android.content.Context
 import androidx.room.Room
 import com.example.yumifi1.features.auth.interactor.database.UserDao
+import com.example.yumifi1.features.comment.interactor.database.CommentDao
 import com.example.yumifi1.features.interactor.database.YumifiDatabase
 import com.example.yumifi1.features.product_details.interactor.database.ProductDao
 import com.example.yumifi1.features.recipe_details.interactor.database.IngredientDao
@@ -52,9 +53,9 @@ class DatabaseModule {
         database: YumifiDatabase,
     ): IngredientDao = database.ingredientDao()
 
-//    @Provides
-//    @Singleton
-//    fun provideRecipeIngredientsCrossRefDao(
-//        database: YumifiDatabase,
-//    ): RecipeIngredientsCrossRefDao = database.recipeIngredientsCrossRefDao()
+    @Provides
+    @Singleton
+    fun provideCommentDao(
+        database: YumifiDatabase,
+    ): CommentDao = database.commentDao()
 }
