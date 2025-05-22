@@ -68,14 +68,16 @@ class RecipeRepository @Inject constructor(
 
     @Transaction
     fun getAllRecipes(): Flow<List<Recipe>> = recipeDao.getAllRecipes().map { recipes ->
-        recipes.map { entity -> entity.mapToDomain() }
+        val userId = authRepository.getCurrentUserId()
+        recipes.map { entity -> entity.mapToDomain(userId) }
     }
 
     @Transaction
     fun getRecipes(userId: Long): Flow<List<Recipe>> = recipeDao.getRecipesWithIngredients(userId)
         .map { recipesWithIngredients ->
+            val userId = authRepository.getCurrentUserId()
             recipesWithIngredients.map { entity ->
-                entity.mapToDomain()
+                entity.mapToDomain(userId)
             }
         }
 
@@ -95,22 +97,24 @@ class RecipeRepository @Inject constructor(
         recipeId: Long
     ): Flow<Recipe> = recipeDao.getRecipeWithIngredients(recipeId)
         .map { recipeWithIngredients ->
-            recipeWithIngredients.mapToDomain()
+            val userId = authRepository.getCurrentUserId()
+            recipeWithIngredients.mapToDomain(userId)
         }
 
     suspend fun getRecipes(
         productsId: List<Long>
     ) = withContext(Dispatchers.IO) {
+        val userId = authRepository.getCurrentUserId()
         recipeDao.getRecipesWithIngredients(
             productsId = productsId,
         ).map { recipesWithIngredients ->
             recipesWithIngredients.map { entity ->
-                entity.mapToDomain()
+                entity.mapToDomain(userId = userId)
             }
         }
     }
 
-    private suspend fun RecipeWithIngredients.mapToDomain(): Recipe =
+    private suspend fun RecipeWithIngredients.mapToDomain(userId: Long): Recipe =
         Recipe(
             id = recipe.id,
             name = recipe.name,
@@ -124,9 +128,19 @@ class RecipeRepository @Inject constructor(
                 }
             },
             comments = comments.map { entity ->
-                entity.mapToDomain()
+                entity.mapToDomain(userId = userId)
             }
         )
+
+    suspend fun isRecipeOwnerByUser(
+        userId: Long,
+        recipeId: Long
+    ): Boolean = withContext(Dispatchers.IO) {
+        recipeDao.isRecipeOwnedByUser(
+            userId = userId,
+            recipeId = recipeId,
+        )
+    }
 
     private fun IngredientEntity.mapToDomain(
         product: ProductEntity,

@@ -5,6 +5,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
@@ -24,6 +25,7 @@ import com.example.yumifi1.features.product_details.ui.model.Product
 fun IngredientItemComponent(
     modifier: Modifier,
     product: Product,
+    isEditable: Boolean,
     onDeleteClicked: () -> Unit,
 ) {
     Row(
@@ -33,27 +35,30 @@ fun IngredientItemComponent(
         Text(
             text = product.name,
             modifier = Modifier.weight(1f)
+                .padding(vertical = 8.dp)
         )
-        IconButton(
-            onClick = onDeleteClicked
-        ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.onPrimary)
-                    .border(
-                        width = 1.dp,
-                        color = Color.LightGray,
-                        shape = CircleShape
-                    ),
-                contentAlignment = Alignment.Center
+        if (isEditable) {
+            IconButton(
+                onClick = onDeleteClicked
             ) {
-                Icon(
-                    imageVector = Icons.Default.Delete,
-                    tint = Color.LightGray,
-                    contentDescription = null,
-                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.onPrimary)
+                        .border(
+                            width = 1.dp,
+                            color = Color.LightGray,
+                            shape = CircleShape
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        tint = Color.LightGray,
+                        contentDescription = null,
+                    )
+                }
             }
         }
     }

@@ -55,4 +55,28 @@ class CommentRepository @Inject constructor(
         commentDao.deleteCommentById(commentId = commentId)
         Result.success(Unit)
     }
+
+    suspend fun getComment(
+        commentId: Long
+    ): Result<Comment> = withContext(Dispatchers.IO) {
+        val commentEntity = commentDao.getComment(commentId)
+            ?: return@withContext Result.failure(
+                IllegalStateException("Не удалось найти комментарий")
+            )
+        val comment = Comment(
+            id = commentEntity.id,
+            text = commentEntity.text,
+        )
+        Result.success(comment)
+    }
+
+    suspend fun isCommentOwnedUser(
+        commentId: Long,
+        userId: Long,
+    ): Boolean = withContext(Dispatchers.IO) {
+        commentDao.isCommentOwnedUser(
+            commentId = commentId,
+            userId = userId,
+        )
+    }
 }

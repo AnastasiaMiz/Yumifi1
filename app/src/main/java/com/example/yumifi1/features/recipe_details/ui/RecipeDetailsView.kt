@@ -106,12 +106,12 @@ private fun ToolbarComponent(
             fontWeight = FontWeight.Medium,
         )
         IconButton(
-            enabled = state.recipe.id != null,
+            enabled = state.isRecipeOwnedUser,
             onClick = { onDeleteClicked() }
         ) {
             Icon(
                 imageVector = Icons.Default.Delete,
-                tint = if (state.recipe.id == null) {
+                tint = if (state.recipe.id == null || !state.isRecipeOwnedUser) {
                     Color.LightGray
                 } else {
                     MaterialTheme.colorScheme.primary
@@ -139,7 +139,7 @@ private fun ContentComponent(
                 Text(text = stringResource(id = R.string.recipe_name_label))
             },
             onValueChange = viewModel::onNameChanged,
-            enabled = !state.isLoading,
+            readOnly = !state.isRecipeOwnedUser || state.isLoading,
             maxLines = 2,
             modifier = Modifier
                 .padding(horizontal = 16.dp)
@@ -155,7 +155,14 @@ private fun ContentComponent(
                 bottom = 0,
             ),
         ) {
-            RecipeTabsItems.items.forEach { item ->
+            val items = RecipeTabsItems.items.filter { tab ->
+                if (state.recipe.id == null) {
+                    tab.type != RecipeDetailsTab.COMMENTS
+                } else {
+                    true
+                }
+            }
+            items.forEach { item ->
                 val label = stringResource(item.labelRes)
                 NavigationBarItem(
                     selected = state.selectedTab == item.type,
@@ -181,7 +188,7 @@ private fun ContentComponent(
                 RecipeDetailsTab.DESCRIPTION -> {
                     RecipeDescriptionComponent(
                         description = state.recipe.description,
-                        isLoading = state.isLoading,
+                        isEnabled = state.isRecipeOwnedUser && !state.isLoading,
                         onTextChanged = viewModel::onDescriptionChanged,
                         modifier = Modifier.padding(top = 16.dp),
                     )
@@ -190,6 +197,7 @@ private fun ContentComponent(
                     RecipeIngredientsComponent(
                         modifier = Modifier.fillMaxWidth(),
                         ingredients = state.recipe.ingredients,
+                        isEditable = state.isRecipeOwnedUser && !state.isLoading,
                         onAddIngredientClicked = {
                             openNextView(Screen.AddIngredient)
                         },
@@ -203,22 +211,29 @@ private fun ContentComponent(
                             .padding(horizontal = 16.dp)
                             .fillMaxWidth(),
                         onItemClicked = { comment ->
-                            openNextView(
-                                Screen.Comment(commentId = comment?.id)
-                            )
+                            state.recipe.id?.let { recipeId ->
+                                openNextView(
+                                    Screen.Comment(
+                                        recipeId = recipeId,
+                                        commentId = comment?.id
+                                    )
+                                )
+                            }
                         }
                     )
                 }
             }
         }
-        Button(
-            onClick = viewModel::onSaveClicked,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            enabled = !state.isLoading,
-        ) {
-            Text(text = stringResource(id = R.string.save))
+        if (state.recipe.id == null || state.isRecipeOwnedUser) {
+            Button(
+                onClick = viewModel::onSaveClicked,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                enabled = !state.isLoading,
+            ) {
+                Text(text = stringResource(id = R.string.save))
+            }
         }
     }
 }

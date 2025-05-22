@@ -22,7 +22,6 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -58,13 +57,25 @@ class RecipeDetailsViewModel @Inject constructor(
         if (recipeId != null) {
             recipeJob = recipeRepository.getRecipeWithIngredients(recipeId)
                 .onEach { recipe ->
+                    val userId = authRepository.getCurrentUserId()
+                    val isRecipeOwnedUser = recipeRepository.isRecipeOwnerByUser(
+                        userId = userId,
+                        recipeId = recipeId,
+                    )
                     _state.update { state ->
                         state.copy(
                             recipe = recipe,
+                            isRecipeOwnedUser = isRecipeOwnedUser,
                         )
                     }
                 }
                 .launchIn(viewModelScope)
+        } else {
+            _state.update { state ->
+                state.copy(
+                    isRecipeOwnedUser = true,
+                )
+            }
         }
         viewModelScope.launch {
             val userId = authRepository.getCurrentUserId()

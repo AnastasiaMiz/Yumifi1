@@ -35,5 +35,18 @@ interface CommentDao {
     suspend fun deleteCommentById(commentId: Long)
 
     @Query("SELECT * FROM $COMMENTS_TABLE WHERE $COMMENT_USER_OWNER = :userId")
-    fun getCommentsForUser(userId: Int): Flow<List<CommentEntity>>
+    fun getCommentsForUser(userId: Long): Flow<List<CommentEntity>>
+
+    @Query("SELECT * FROM $COMMENTS_TABLE WHERE $COMMENT_ID = :commentId LIMIT 1")
+    suspend fun getComment(commentId: Long): CommentEntity?
+
+    @Query("""
+        SELECT EXISTS(
+            SELECT 1 FROM $COMMENTS_TABLE WHERE $COMMENT_ID = :commentId AND $COMMENT_USER_OWNER = :userId
+        )
+    """)
+    suspend fun isCommentOwnedUser(
+        commentId: Long,
+        userId: Long,
+    ): Boolean
 }

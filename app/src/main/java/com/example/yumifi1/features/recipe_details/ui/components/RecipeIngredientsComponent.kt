@@ -15,6 +15,7 @@ import com.example.yumifi1.features.recipe_details.ui.model.Recipe
 fun RecipeIngredientsComponent(
     modifier: Modifier = Modifier,
     ingredients: List<Recipe.Ingredient>,
+    isEditable: Boolean,
     onAddIngredientClicked: () -> Unit,
     onDeleteIngredientClicked: (Recipe.Ingredient) -> Unit,
 ) {
@@ -28,20 +29,23 @@ fun RecipeIngredientsComponent(
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
                 product = ingredients[index].product,
+                isEditable = isEditable,
                 onDeleteClicked = {
                     onDeleteIngredientClicked(ingredients[index])
                 },
             )
             Spacer(modifier = Modifier.height(8.dp))
         }
-        item {
-            AdderComponent(
-                labelRes = R.string.recipe_add_ingredient,
-                modifier = Modifier
-                    .padding(horizontal = 16.dp)
-                    .fillMaxWidth(),
-                onClicked = onAddIngredientClicked,
-            )
+        if (isEditable) {
+            item {
+                AdderComponent(
+                    labelRes = R.string.recipe_add_ingredient,
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .fillMaxWidth(),
+                    onClicked = onAddIngredientClicked,
+                )
+            }
         }
     }
 }

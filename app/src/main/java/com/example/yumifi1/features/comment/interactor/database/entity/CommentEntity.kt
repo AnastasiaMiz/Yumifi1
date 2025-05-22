@@ -54,7 +54,8 @@ data class CommentEntity(
     }
 }
 
-fun CommentEntity.mapToDomain(): Comment = Comment(
+fun CommentEntity.mapToDomain(userId: Long): Comment = Comment(
     id = id,
     text = text,
+    isMy = userOwnerId == userId
 )

@@ -29,9 +29,10 @@ fun RecipeCommentsComponent(
             }
         }
         items(count = comments.size) { index ->
+            Spacer(modifier = Modifier.height(16.dp))
             CommentItemComponent(
                 comment = comments[index],
-                modifier = modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
             ) { item ->
                 onItemClicked(item)
             }

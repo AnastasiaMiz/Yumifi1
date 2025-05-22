@@ -52,4 +52,11 @@ interface RecipeDao {
     fun getRecipesWithIngredients(
         productsId: List<Long>
     ): Flow<List<RecipeWithIngredients>>
+
+    @Query("""
+        SELECT EXISTS(
+            SELECT 1 FROM $RECIPES_TABLE WHERE $RECIPE_ID_COLUMN = :recipeId AND $RECIPE_USER_OWNER_ID = :userId
+        )
+    """)
+    suspend fun isRecipeOwnedByUser(userId: Long, recipeId: Long): Boolean
 }

@@ -57,16 +57,17 @@ sealed class Screen(val route: String) {
     data object Search : Screen("search")
 
     data class Comment(
-        val commentId: Long? = null
+        val commentId: Long? = null,
+        val recipeId: Long,
     ) : Screen(
         route = if (commentId == null) {
-            "comment"
+            "comment/$recipeId"
         } else {
-            "comment?commentId=$commentId"
+            "comment/$recipeId?commentId=$commentId"
         }
     ) {
         companion object {
-            fun getNavigationRoute(): String = "comment?commentId={commentId}"
+            fun getNavigationRoute(): String = "comment/{recipeId}?commentId={commentId}"
         }
     }
 }

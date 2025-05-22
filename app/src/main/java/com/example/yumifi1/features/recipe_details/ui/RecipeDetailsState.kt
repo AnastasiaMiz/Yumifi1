@@ -7,4 +7,5 @@ data class RecipeDetailsState(
     val recipe: Recipe = Recipe(),
     val selectedTab: RecipeDetailsTab = RecipeDetailsTab.DESCRIPTION,
     val isLoading: Boolean = false,
+    val isRecipeOwnedUser: Boolean = false,
 )

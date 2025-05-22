@@ -14,7 +14,7 @@ import com.example.yumifi1.R
 fun RecipeDescriptionComponent(
     modifier: Modifier = Modifier,
     description: String,
-    isLoading: Boolean,
+    isEnabled: Boolean,
     onTextChanged: (String) -> Unit,
 ) {
     OutlinedTextField(
@@ -23,7 +23,7 @@ fun RecipeDescriptionComponent(
             Text(text = stringResource(id = R.string.recipe_description_label))
         },
         onValueChange = onTextChanged,
-        enabled = !isLoading,
+        readOnly = !isEnabled,
         modifier = modifier
             .padding(horizontal = 16.dp)
             .fillMaxWidth(),

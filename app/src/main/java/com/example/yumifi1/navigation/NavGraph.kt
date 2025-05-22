@@ -65,7 +65,7 @@ fun NavGraph(
             arguments = listOf(
                 navArgument("productId") {
                     type = NavType.LongType
-                    defaultValue = -1
+                    defaultValue = -1L
                 }
             ),
         ) { backStackEntry ->
@@ -79,7 +79,7 @@ fun NavGraph(
             arguments = listOf(
                 navArgument("recipeId") {
                     type = NavType.LongType
-                    defaultValue = -1
+                    defaultValue = -1L
                 }
             ),
         ) { backStackEntry ->
@@ -152,7 +152,11 @@ fun NavGraph(
             arguments = listOf(
                 navArgument("commentId") {
                     type = NavType.LongType
-                    defaultValue = -1
+                    defaultValue = -1L
+                },
+                navArgument("recipeId") {
+                    type = NavType.LongType
+                    defaultValue = -1L
                 }
             )
         ) {  backStackEntry ->

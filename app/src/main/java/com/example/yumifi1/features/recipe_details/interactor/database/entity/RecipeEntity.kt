@@ -6,7 +6,6 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.ForeignKey.Companion.CASCADE
 import androidx.room.Index
-import androidx.room.Junction
 import androidx.room.PrimaryKey
 import androidx.room.Relation
 import com.example.yumifi1.features.auth.interactor.database.entity.UserEntity
@@ -50,42 +49,6 @@ data class RecipeEntity(
         const val RECIPE_USER_OWNER_ID = "user_owner_id"
     }
 }
-
-/**
- * Связующая таблица для many-to-many между рецептами и товарами
- */
-//@Entity(
-//    tableName = RECIPE_INGREDIENT_CROSS_REF,
-//    primaryKeys = [
-//        RECIPE_ID_COLUMN,
-//        INGREDIENT_ID_COLUMN,
-//    ],
-//    foreignKeys = [
-//        ForeignKey(
-//            entity = RecipeEntity::class,
-//            parentColumns = [RECIPE_ID_COLUMN],
-//            childColumns = [RECIPE_ID_COLUMN],
-//            onDelete = CASCADE,
-//        ),
-//        ForeignKey(
-//            entity = IngredientEntity::class,
-//            parentColumns = [INGREDIENT_ID_COLUMN],
-//            childColumns = [INGREDIENT_ID_COLUMN],
-//            onDelete = CASCADE,
-//        )
-//    ],
-//    indices = [
-//        Index(INGREDIENT_ID_COLUMN),
-//    ]
-//)
-//data class RecipeIngredientsCrossRef(
-//    val recipeId: Int,
-//    val ingredientId: Int,
-//) {
-//    companion object {
-//        const val RECIPE_INGREDIENT_CROSS_REF = "recipe_ingredient_cross_ref"
-//    }
-//}
 
 /**
  * Загрузка рецепта с ингредиентами
