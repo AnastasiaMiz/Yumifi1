@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.yumifi1.R
+import com.example.yumifi1.features.recipe_details.ui.components.RecipeCommentsComponent
 import com.example.yumifi1.features.recipe_details.ui.components.RecipeDescriptionComponent
 import com.example.yumifi1.features.recipe_details.ui.components.RecipeIngredientsComponent
 import com.example.yumifi1.features.recipe_details.ui.data.RecipeDetailsTab
@@ -196,7 +197,17 @@ private fun ContentComponent(
                     )
                 }
                 RecipeDetailsTab.COMMENTS -> {
-                    // TODO: Компонент комментариев
+                    RecipeCommentsComponent(
+                        comments = state.recipe.comments,
+                        modifier = Modifier
+                            .padding(horizontal = 16.dp)
+                            .fillMaxWidth(),
+                        onItemClicked = { comment ->
+                            openNextView(
+                                Screen.Comment(commentId = comment?.id)
+                            )
+                        }
+                    )
                 }
             }
         }

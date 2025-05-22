@@ -53,4 +53,8 @@
 
     <!--  Экран поиска  -->
     <string name="search_title">Поиск</string>
+
+    <!--  Экран комментария  -->
+    <string name="comment_title">Комментарий</string>
+    <string name="comment_add">Добавить комментарий</string>
 </resources>

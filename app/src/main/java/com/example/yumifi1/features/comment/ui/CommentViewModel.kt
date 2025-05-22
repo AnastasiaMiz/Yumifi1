@@ -15,4 +15,8 @@ class CommentViewModel @Inject constructor(
 
     private val _state = MutableStateFlow(CommentState())
     val state: StateFlow<CommentState> = _state.asStateFlow()
+
+    fun onDeleteClicked() {
+        // TODO: удалить комментарий
+    }
 }

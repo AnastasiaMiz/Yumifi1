@@ -55,6 +55,20 @@ sealed class Screen(val route: String) {
     data object AddIngredient : Screen("add_ingredient?isRoot=false")
 
     data object Search : Screen("search")
+
+    data class Comment(
+        val commentId: Long? = null
+    ) : Screen(
+        route = if (commentId == null) {
+            "comment"
+        } else {
+            "comment?commentId=$commentId"
+        }
+    ) {
+        companion object {
+            fun getNavigationRoute(): String = "comment?commentId={commentId}"
+        }
+    }
 }
 
 sealed class TabScreen(route: String) : Screen(route) {

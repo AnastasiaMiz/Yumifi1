@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.yumifi1.R
 import com.example.yumifi1.features.recipe_details.ui.model.Recipe
 
 @Composable
@@ -34,7 +35,8 @@ fun RecipeIngredientsComponent(
             Spacer(modifier = Modifier.height(8.dp))
         }
         item {
-            AddIngredientComponent(
+            AdderComponent(
+                labelRes = R.string.recipe_add_ingredient,
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
                     .fillMaxWidth(),

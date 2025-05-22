@@ -10,6 +10,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.example.yumifi1.features.auth.ui.AuthView
+import com.example.yumifi1.features.comment.ui.CommentView
+import com.example.yumifi1.features.comment.ui.CommentViewModel
 import com.example.yumifi1.features.product_details.ui.ProductDetailsView
 import com.example.yumifi1.features.product_details.ui.ProductDetailsViewModel
 import com.example.yumifi1.features.products.ui.ProductsView
@@ -20,7 +22,6 @@ import com.example.yumifi1.features.recipes.ui.RecipesView
 import com.example.yumifi1.features.reg.ui.RegView
 import com.example.yumifi1.features.search.ui.SearchView
 import com.example.yumifi1.features.splash.SplashView
-import kotlinx.coroutines.flow.MutableSharedFlow
 
 @Composable
 fun NavGraph(
@@ -87,6 +88,11 @@ fun NavGraph(
                 viewModel = viewModel,
                 openNextView = { nextView ->
                     navController.navigate(nextView.route) {
+                        if (nextView == Screen.Auth) {
+                            popUpTo(Screen.Home.route) {
+                                inclusive = true
+                            }
+                        }
                         launchSingleTop = true
                     }
                 },
@@ -113,6 +119,11 @@ fun NavGraph(
                     navController.popBackStack()
                 } else {
                     navController.navigate(nextView.route) {
+                        if (nextView == Screen.Auth) {
+                            popUpTo(Screen.Home.route) {
+                                inclusive = true
+                            }
+                        }
                         launchSingleTop = true
                     }
                 }
@@ -122,6 +133,33 @@ fun NavGraph(
             route = Screen.Search.route
         ) {
             SearchView { nextView ->
+                if (nextView == null) {
+                    navController.popBackStack()
+                } else {
+                    navController.navigate(nextView.route) {
+                        if (nextView == Screen.Auth) {
+                            popUpTo(Screen.Home.route) {
+                                inclusive = true
+                            }
+                        }
+                        launchSingleTop = true
+                    }
+                }
+            }
+        }
+        composable(
+            route = Screen.Comment.getNavigationRoute(),
+            arguments = listOf(
+                navArgument("commentId") {
+                    type = NavType.LongType
+                    defaultValue = -1
+                }
+            )
+        ) {  backStackEntry ->
+            val viewModel: CommentViewModel = hiltViewModel(backStackEntry)
+            CommentView(
+                viewModel = viewModel
+            ) { nextView ->
                 if (nextView == null) {
                     navController.popBackStack()
                 } else {
