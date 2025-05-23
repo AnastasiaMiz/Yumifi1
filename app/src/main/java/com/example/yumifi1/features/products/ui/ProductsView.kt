@@ -10,13 +10,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.ExitToApp
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -30,7 +29,6 @@ import com.example.yumifi1.R
 import com.example.yumifi1.features.product_details.ui.model.Product
 import com.example.yumifi1.features.products.ui.components.AddProductComponent
 import com.example.yumifi1.features.products.ui.components.ProductItemComponent
-import com.example.yumifi1.features.products.ui.event.ProductsEvent
 import com.example.yumifi1.navigation.Screen
 
 @Composable
@@ -41,16 +39,6 @@ fun ProductsView(
 ) {
     val state by viewModel.state.collectAsState()
 
-    LaunchedEffect(Unit) {
-        viewModel.event.collect { event ->
-            when(event) {
-                is ProductsEvent.OpenAuthView -> {
-                    openView(Screen.Auth)
-                }
-            }
-        }
-    }
-
     Column(
         modifier = Modifier
             .fillMaxSize(),
@@ -59,7 +47,7 @@ fun ProductsView(
             isRoot = isRoot,
             onAction = {
                 if (isRoot) {
-                    viewModel.onLogoutClicked()
+                    openView(Screen.Profile)
                 } else {
                     openView(null)
                 }
@@ -125,7 +113,7 @@ private fun ToolbarComponent(
                     )
             ) {
                 Icon(
-                    imageVector = Icons.AutoMirrored.Default.ExitToApp,
+                    imageVector = Icons.Default.Person,
                     tint = MaterialTheme.colorScheme.primary,
                     contentDescription = null,
                 )

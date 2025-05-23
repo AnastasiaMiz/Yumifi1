@@ -4,17 +4,35 @@ import android.content.SharedPreferences
 import androidx.core.content.edit
 import com.example.yumifi1.features.auth.interactor.database.UserDao
 import com.example.yumifi1.features.auth.interactor.database.entity.UserEntity
+import com.example.yumifi1.features.auth.interactor.database.entity.mapToDomain
 import com.example.yumifi1.features.auth.interactor.di.UserConfig
+import com.example.yumifi1.features.comment.interactor.database.entity.mapToDomain
+import com.example.yumifi1.features.product_details.interactor.database.ProductDao
+import com.example.yumifi1.features.product_details.interactor.database.entity.ProductEntity
+import com.example.yumifi1.features.product_details.ui.model.Product
+import com.example.yumifi1.features.product_details.ui.model.ProductUnit
+import com.example.yumifi1.features.profile.ui.model.User
+import com.example.yumifi1.features.profile.ui.model.UserWithContent
+import com.example.yumifi1.features.recipe_details.interactor.database.RecipeDao
+import com.example.yumifi1.features.recipe_details.interactor.database.entity.IngredientEntity
+import com.example.yumifi1.features.recipe_details.interactor.database.entity.RecipeWithIngredients
+import com.example.yumifi1.features.recipe_details.ui.model.Recipe
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import java.security.MessageDigest
 import java.util.Base64
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.collections.map
 
 @Singleton
 class AuthRepository @Inject constructor(
     private val userDao: UserDao,
+    private val productDao: ProductDao,
+    private val recipeDao: RecipeDao,
     @UserConfig private val userSharedPreferences: SharedPreferences
 ) {
     private val messageDigest = MessageDigest.getInstance("SHA-256")
@@ -82,10 +100,59 @@ class AuthRepository @Inject constructor(
         )
     }
 
+    fun getUserWithContent(
+        userId: Long,
+    ): Flow<UserWithContent> = combine(
+        userDao.getUserWithContent(userId = userId),
+        recipeDao.getRecipesWithIngredients(userId = userId)
+    ) { userWithContent, recipes ->
+        userWithContent to recipes
+    }.map { (userWithContext, recipes) ->
+        UserWithContent(
+            user = userWithContext.user.mapToDomain(),
+            recipes = recipes.map { recipeEntity ->
+                recipeEntity.mapToDomain(userId)
+            },
+            comments = userWithContext.comments.map { commentEntity ->
+                commentEntity.mapToDomain(userId = userId)
+            },
+        )
+    }
+
     private fun hashPassword(password: String): String {
         val hashedPassword = messageDigest.digest(password.toByteArray())
         return Base64.getEncoder().encodeToString(hashedPassword)
     }
+
+    private suspend fun RecipeWithIngredients.mapToDomain(userId: Long): Recipe =
+        Recipe(
+            id = recipe.id,
+            name = recipe.name,
+            description = recipe.description,
+            ingredients = ingredients.mapNotNull { entity ->
+                val productEntity = productDao.getProductById(entity.productId)
+                if (productEntity != null) {
+                    entity.mapToDomain(product = productEntity)
+                } else {
+                    null
+                }
+            },
+            comments = comments.map { entity ->
+                entity.mapToDomain(userId = userId)
+            }
+        )
+
+    private fun IngredientEntity.mapToDomain(
+        product: ProductEntity,
+    ): Recipe.Ingredient = Recipe.Ingredient(
+        id = id,
+        product = Product(
+            id = product.id,
+            name = product.name,
+            unit = ProductUnit.valueOf(product.unit),
+        ),
+        quantity = 1,
+    )
 
     private companion object {
         const val USER_ID_KEY = "USER_ID_KEY"

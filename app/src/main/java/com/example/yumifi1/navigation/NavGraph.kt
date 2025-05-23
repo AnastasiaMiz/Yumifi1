@@ -16,6 +16,7 @@ import com.example.yumifi1.features.product_details.ui.ProductDetailsView
 import com.example.yumifi1.features.product_details.ui.ProductDetailsViewModel
 import com.example.yumifi1.features.products.ui.ProductsView
 import com.example.yumifi1.features.products.ui.ProductsViewModel
+import com.example.yumifi1.features.profile.ui.ProfileView
 import com.example.yumifi1.features.recipe_details.ui.RecipeDetailsView
 import com.example.yumifi1.features.recipe_details.ui.RecipeDetailsViewModel
 import com.example.yumifi1.features.recipes.ui.RecipesView
@@ -164,6 +165,22 @@ fun NavGraph(
             CommentView(
                 viewModel = viewModel
             ) { nextView ->
+                if (nextView == null) {
+                    navController.popBackStack()
+                } else {
+                    navController.navigate(nextView.route) {
+                        if (nextView == Screen.Auth) {
+                            popUpTo(Screen.Home.route) {
+                                inclusive = true
+                            }
+                        }
+                        launchSingleTop = true
+                    }
+                }
+            }
+        }
+        composable(route = Screen.Profile.route) {
+            ProfileView { nextView ->
                 if (nextView == null) {
                     navController.popBackStack()
                 } else {

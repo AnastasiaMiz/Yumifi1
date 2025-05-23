@@ -44,13 +44,6 @@
     <string name="product_name_label">Название продукта</string>
     <string name="product_unit_label">Единица измерения</string>
 
-    <!--  Экран профиля  -->
-    <string name="profile_title">Профиль</string>
-    <string name="nickname">Никнейм</string>
-    <string name="set_nickname">Сохранить никнейм</string>
-    <string name="load_avatar">Загрузить аватар</string>
-    <string name="logout">Выйти</string>
-
     <!--  Экран поиска  -->
     <string name="search_title">Поиск</string>
 
@@ -58,4 +51,9 @@
     <string name="comment_title">Комментарий</string>
     <string name="comment_add">Добавить комментарий</string>
     <string name="comment_my">Мой комментарий</string>
+
+    <!--  Экран профиля  -->
+    <string name="profile_title">Профиль</string>
+    <string name="profile_recipes">Мои рецепты</string>
+    <string name="profile_comments">Мои комментарии</string>
 </resources>

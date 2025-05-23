@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.yumifi1.features.auth.interactor.AuthRepository
 import com.example.yumifi1.features.product_details.interactor.ProductRepository
 import com.example.yumifi1.features.product_details.ui.model.Product
-import com.example.yumifi1.features.products.ui.event.ProductsEvent
 import com.example.yumifi1.features.recipe_details.ui.handler.AddIngredientHandler
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -30,9 +29,6 @@ class ProductsViewModel @Inject constructor(
     private val _state = MutableStateFlow(ProductsState())
     val state: StateFlow<ProductsState> = _state.asStateFlow()
 
-    private val _event = MutableSharedFlow<ProductsEvent>()
-    val event: SharedFlow<ProductsEvent> = _event.asSharedFlow()
-
     private var isRoot: Boolean = true
 
     init {
@@ -48,13 +44,6 @@ class ProductsViewModel @Inject constructor(
             }
         }
         isRoot = savedStateHandle.get<Boolean>("isRoot") == true
-    }
-
-    fun onLogoutClicked() {
-        viewModelScope.launch {
-            authRepository.logout()
-            _event.emit(ProductsEvent.OpenAuthView)
-        }
     }
 
     fun onDeleteClicked(product: Product) {

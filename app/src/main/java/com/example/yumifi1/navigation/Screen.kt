@@ -70,6 +70,8 @@ sealed class Screen(val route: String) {
             fun getNavigationRoute(): String = "comment/{recipeId}?commentId={commentId}"
         }
     }
+
+    data object Profile : Screen("profile")
 }
 
 sealed class TabScreen(route: String) : Screen(route) {

@@ -5,9 +5,13 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import com.example.yumifi1.features.auth.interactor.database.entity.USER_TABLE
 import com.example.yumifi1.features.auth.interactor.database.entity.UserEntity
 import com.example.yumifi1.features.auth.interactor.database.entity.UserEntity.Companion.USER_EMAIL_COLUMN
+import com.example.yumifi1.features.auth.interactor.database.entity.UserEntity.Companion.USER_ID_COLUMN
+import com.example.yumifi1.features.auth.interactor.database.entity.UserWithContentEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface UserDao {
@@ -19,4 +23,10 @@ interface UserDao {
 
     @Query("SELECT * FROM $USER_TABLE WHERE $USER_EMAIL_COLUMN = :email LIMIT 1")
     suspend fun getByEmail(email: String): UserEntity?
+
+    @Transaction
+    @Query("SELECT * FROM $USER_TABLE WHERE $USER_ID_COLUMN = :userId")
+    fun getUserWithContent(
+        userId: Long
+    ): Flow<UserWithContentEntity>
 }

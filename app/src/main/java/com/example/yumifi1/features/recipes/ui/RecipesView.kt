@@ -9,14 +9,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ExitToApp
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -27,10 +26,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.yumifi1.R
+import com.example.yumifi1.features.recipe_details.ui.model.Recipe
 import com.example.yumifi1.features.recipes.ui.components.AddRecipeItemComponent
 import com.example.yumifi1.features.recipes.ui.components.RecipeItemComponent
-import com.example.yumifi1.features.recipes.ui.event.RecipesEvent
-import com.example.yumifi1.features.recipe_details.ui.model.Recipe
 import com.example.yumifi1.navigation.Screen
 
 @Composable
@@ -40,22 +38,12 @@ fun RecipesView(
 ) {
     val state by recipesViewModel.state.collectAsState()
 
-    LaunchedEffect(Unit) {
-        recipesViewModel.event.collect { event ->
-            when(event) {
-                is RecipesEvent.OpenAuthView -> {
-                    openView(Screen.Auth)
-                }
-            }
-        }
-    }
-
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
         ToolbarComponent(
             onSearchClicked = { openView(Screen.Search) },
-            onLogoutClicked = recipesViewModel::onLogoutClicked
+            onProfileClicked = { openView(Screen.Profile) }
         )
         RecipesContentComponent(
             recipes = state.recipes,
@@ -69,7 +57,7 @@ fun RecipesView(
 @Composable
 private fun ToolbarComponent(
     onSearchClicked: () -> Unit,
-    onLogoutClicked: () -> Unit
+    onProfileClicked: () -> Unit
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -94,10 +82,10 @@ private fun ToolbarComponent(
             fontWeight = FontWeight.Medium,
         )
         IconButton(
-            onClick = onLogoutClicked
+            onClick = onProfileClicked
         ) {
             Icon(
-                imageVector = Icons.AutoMirrored.Default.ExitToApp,
+                imageVector = Icons.Default.Person,
                 tint = MaterialTheme.colorScheme.primary,
                 contentDescription = null,
             )
