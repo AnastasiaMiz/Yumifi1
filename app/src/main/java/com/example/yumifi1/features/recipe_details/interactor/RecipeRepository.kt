@@ -8,11 +8,14 @@ import com.example.yumifi1.features.product_details.interactor.database.entity.P
 import com.example.yumifi1.features.product_details.ui.model.Product
 import com.example.yumifi1.features.product_details.ui.model.ProductUnit
 import com.example.yumifi1.features.recipe_details.interactor.database.IngredientDao
+import com.example.yumifi1.features.recipe_details.interactor.database.PhotoDao
 import com.example.yumifi1.features.recipe_details.interactor.database.RecipeDao
 import com.example.yumifi1.features.recipe_details.interactor.database.entity.IngredientEntity
+import com.example.yumifi1.features.recipe_details.interactor.database.entity.PhotoEntity
 import com.example.yumifi1.features.recipe_details.interactor.database.entity.RecipeEntity
-import com.example.yumifi1.features.recipe_details.interactor.database.entity.RecipeWithIngredients
+import com.example.yumifi1.features.recipe_details.interactor.database.entity.RecipeWithContent
 import com.example.yumifi1.features.recipe_details.ui.model.Recipe
+import com.example.yumifi1.features.recipe_details.ui.model.RecipePhoto
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -26,10 +29,11 @@ class RecipeRepository @Inject constructor(
     private val ingredientDao: IngredientDao,
     private val authRepository: AuthRepository,
     private val productDao: ProductDao,
+    private val photoDao: PhotoDao,
 ) {
 
     @Transaction
-    suspend fun createRecipeWithIngredients(
+    suspend fun createRecipeWithContent(
         recipe: Recipe,
     ): Result<Unit> = withContext(Dispatchers.IO) {
         val userId = authRepository.getCurrentUserId()
@@ -63,6 +67,10 @@ class RecipeRepository @Inject constructor(
                 }
             }
         }
+        insertPhotos(
+            recipeId = recipeId,
+            photos = recipe.photos,
+        )
         Result.success(Unit)
     }
 
@@ -95,18 +103,29 @@ class RecipeRepository @Inject constructor(
     @Transaction
     fun getRecipeWithIngredients(
         recipeId: Long
-    ): Flow<Recipe> = recipeDao.getRecipeWithIngredients(recipeId)
-        .map { recipeWithIngredients ->
+    ): Flow<Recipe> = recipeDao.getRecipeWithContent(recipeId)
+        .map { recipeWithContent ->
             val userId = authRepository.getCurrentUserId()
-            recipeWithIngredients.mapToDomain(userId)
+            recipeWithContent.mapToDomain(userId)
         }
 
-    suspend fun getRecipes(
-        productsId: List<Long>
-    ) = withContext(Dispatchers.IO) {
+//    suspend fun getRecipes(
+//        productsId: List<Long>
+//    ) = withContext(Dispatchers.IO) {
+//        val userId = authRepository.getCurrentUserId()
+//        recipeDao.getRecipesWithIngredients(
+//            productsId = productsId,
+//        ).map { recipesWithIngredients ->
+//            recipesWithIngredients.map { entity ->
+//                entity.mapToDomain(userId = userId)
+//            }
+//        }
+//    }
+
+    suspend fun getRecipes(productsName: List<String>) = withContext(Dispatchers.IO) {
         val userId = authRepository.getCurrentUserId()
-        recipeDao.getRecipesWithIngredients(
-            productsId = productsId,
+        recipeDao.getRecipesWithContent(
+            productsName = productsName,
         ).map { recipesWithIngredients ->
             recipesWithIngredients.map { entity ->
                 entity.mapToDomain(userId = userId)
@@ -114,7 +133,7 @@ class RecipeRepository @Inject constructor(
         }
     }
 
-    private suspend fun RecipeWithIngredients.mapToDomain(userId: Long): Recipe =
+    private suspend fun RecipeWithContent.mapToDomain(userId: Long): Recipe =
         Recipe(
             id = recipe.id,
             name = recipe.name,
@@ -129,6 +148,12 @@ class RecipeRepository @Inject constructor(
             },
             comments = comments.map { entity ->
                 entity.mapToDomain(userId = userId)
+            },
+            photos = photos.map { entity ->
+                RecipePhoto(
+                    id = entity.id,
+                    uri = entity.uri,
+                )
             }
         )
 
@@ -140,6 +165,23 @@ class RecipeRepository @Inject constructor(
             userId = userId,
             recipeId = recipeId,
         )
+    }
+
+    suspend fun insertPhotos(
+        recipeId: Long,
+        photos: List<RecipePhoto>
+    ): Result<Unit> = withContext(Dispatchers.IO) {
+        val userId = authRepository.getCurrentUserId()
+        val entities = photos.map { domain ->
+            PhotoEntity(
+                id = domain.id,
+                uri = domain.uri,
+                userId = userId,
+                recipeId = recipeId,
+            )
+        }
+        photoDao.insertAll(entities)
+        Result.success(Unit)
     }
 
     private fun IngredientEntity.mapToDomain(

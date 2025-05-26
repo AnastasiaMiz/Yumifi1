@@ -9,6 +9,7 @@ data class Recipe(
     val description: String = "",
     val ingredients: List<Ingredient> = emptyList(),
     val comments: List<Comment> = emptyList(),
+    val photos: List<RecipePhoto> = emptyList(),
 ) {
     data class Ingredient(
         val id: Long? = null,

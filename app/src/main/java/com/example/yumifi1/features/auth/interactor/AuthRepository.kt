@@ -11,11 +11,10 @@ import com.example.yumifi1.features.product_details.interactor.database.ProductD
 import com.example.yumifi1.features.product_details.interactor.database.entity.ProductEntity
 import com.example.yumifi1.features.product_details.ui.model.Product
 import com.example.yumifi1.features.product_details.ui.model.ProductUnit
-import com.example.yumifi1.features.profile.ui.model.User
 import com.example.yumifi1.features.profile.ui.model.UserWithContent
 import com.example.yumifi1.features.recipe_details.interactor.database.RecipeDao
 import com.example.yumifi1.features.recipe_details.interactor.database.entity.IngredientEntity
-import com.example.yumifi1.features.recipe_details.interactor.database.entity.RecipeWithIngredients
+import com.example.yumifi1.features.recipe_details.interactor.database.entity.RecipeWithContent
 import com.example.yumifi1.features.recipe_details.ui.model.Recipe
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -124,7 +123,7 @@ class AuthRepository @Inject constructor(
         return Base64.getEncoder().encodeToString(hashedPassword)
     }
 
-    private suspend fun RecipeWithIngredients.mapToDomain(userId: Long): Recipe =
+    private suspend fun RecipeWithContent.mapToDomain(userId: Long): Recipe =
         Recipe(
             id = recipe.id,
             name = recipe.name,

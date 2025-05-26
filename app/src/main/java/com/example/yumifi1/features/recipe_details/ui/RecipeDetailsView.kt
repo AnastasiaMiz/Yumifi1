@@ -28,6 +28,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -37,6 +38,7 @@ import com.example.yumifi1.R
 import com.example.yumifi1.features.recipe_details.ui.components.RecipeCommentsComponent
 import com.example.yumifi1.features.recipe_details.ui.components.RecipeDescriptionComponent
 import com.example.yumifi1.features.recipe_details.ui.components.RecipeIngredientsComponent
+import com.example.yumifi1.features.recipe_details.ui.components.RecipePhotosComponent
 import com.example.yumifi1.features.recipe_details.ui.data.RecipeDetailsTab
 import com.example.yumifi1.features.recipe_details.ui.data.RecipeTabsItems
 import com.example.yumifi1.features.recipe_details.ui.event.RecipeDetailsEvent
@@ -128,11 +130,27 @@ private fun ContentComponent(
     viewModel: RecipeDetailsViewModel,
     openNextView: (Screen) -> Unit,
 ) {
+    val context = LocalContext.current
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(vertical = 16.dp),
     ) {
+        RecipePhotosComponent(
+            photos = state.recipe.photos,
+            isMy = state.isRecipeOwnedUser && !state.isLoading,
+            modifier = Modifier
+                .height(100.dp)
+                .padding(bottom = 16.dp),
+            onPhotoSelected = { uris ->
+                viewModel.onPhotoSelected(
+                    context = context,
+                    photosUri = uris,
+                )
+            },
+            onPhotoClicked = viewModel::onPhotoClicked,
+        )
         OutlinedTextField(
             value = state.recipe.name,
             label = {

@@ -7,6 +7,7 @@ import com.example.yumifi1.features.comment.interactor.database.CommentDao
 import com.example.yumifi1.features.interactor.database.YumifiDatabase
 import com.example.yumifi1.features.product_details.interactor.database.ProductDao
 import com.example.yumifi1.features.recipe_details.interactor.database.IngredientDao
+import com.example.yumifi1.features.recipe_details.interactor.database.PhotoDao
 import com.example.yumifi1.features.recipe_details.interactor.database.RecipeDao
 import dagger.Module
 import dagger.Provides
@@ -58,4 +59,10 @@ class DatabaseModule {
     fun provideCommentDao(
         database: YumifiDatabase,
     ): CommentDao = database.commentDao()
+
+    @Provides
+    @Singleton
+    fun providePhotoDao(
+        database: YumifiDatabase,
+    ): PhotoDao = database.photoDao()
 }

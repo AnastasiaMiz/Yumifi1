@@ -12,6 +12,7 @@ import com.example.yumifi1.features.auth.interactor.database.entity.UserEntity
 import com.example.yumifi1.features.comment.interactor.database.entity.CommentEntity
 import com.example.yumifi1.features.comment.interactor.database.entity.CommentEntity.Companion.COMMENT_RECIPE_OWNER
 import com.example.yumifi1.features.recipe_details.interactor.database.entity.IngredientEntity.Companion.INGREDIENT_RECIPE_ID
+import com.example.yumifi1.features.recipe_details.interactor.database.entity.PhotoEntity.Companion.PHOTO_RECIPE_ID
 import com.example.yumifi1.features.recipe_details.interactor.database.entity.RecipeEntity.Companion.RECIPE_ID_COLUMN
 import com.example.yumifi1.features.recipe_details.interactor.database.entity.RecipeEntity.Companion.RECIPE_USER_OWNER_ID
 
@@ -41,6 +42,7 @@ data class RecipeEntity(
     val description: String,
     @ColumnInfo(RECIPE_USER_OWNER_ID)
     val userOwnerId: Long,
+    val photoUrl: String? = null,
 ) {
     companion object {
         const val RECIPE_ID_COLUMN = "recipe_id"
@@ -54,7 +56,7 @@ data class RecipeEntity(
  * Загрузка рецепта с ингредиентами
  * (Аналогично можно сделать для загрузки ингредиента вместе с рецептами, где он используется)
  */
-data class RecipeWithIngredients(
+data class RecipeWithContent(
     @Embedded
     val recipe: RecipeEntity,
     @Relation(
@@ -66,5 +68,10 @@ data class RecipeWithIngredients(
         parentColumn = RECIPE_ID_COLUMN,
         entityColumn = COMMENT_RECIPE_OWNER
     )
-    val comments: List<CommentEntity>
+    val comments: List<CommentEntity>,
+    @Relation(
+        parentColumn = RECIPE_ID_COLUMN,
+        entityColumn = PHOTO_RECIPE_ID,
+    )
+    val photos: List<PhotoEntity>,
 )

@@ -1,5 +1,7 @@
 package com.example.yumifi1.features.recipe_details.ui
 
+import android.content.Context
+import android.net.Uri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,9 +13,12 @@ import com.example.yumifi1.features.recipe_details.ui.data.RecipeDetailsTab
 import com.example.yumifi1.features.recipe_details.ui.event.RecipeDetailsEvent
 import com.example.yumifi1.features.recipe_details.ui.handler.AddIngredientHandler
 import com.example.yumifi1.features.recipe_details.ui.model.Recipe.Ingredient
+import com.example.yumifi1.features.recipe_details.ui.model.RecipePhoto
 import com.example.yumifi1.message.MessageHandler
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -24,7 +29,14 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.io.File
+import java.io.FileOutputStream
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import java.util.UUID
 import javax.inject.Inject
+import kotlin.uuid.Uuid
 
 @HiltViewModel
 class RecipeDetailsViewModel @Inject constructor(
@@ -104,7 +116,7 @@ class RecipeDetailsViewModel @Inject constructor(
     fun onSaveClicked() {
         viewModelScope.launch {
             updateLoading(isLoading = true)
-            recipeRepository.createRecipeWithIngredients(
+            recipeRepository.createRecipeWithContent(
                 recipe = state.value.recipe,
             ).onSuccess {
                 recipeRepository.deleteIngredients(ingredientsForDelete)
@@ -153,6 +165,48 @@ class RecipeDetailsViewModel @Inject constructor(
         viewModelScope.launch {
             recipeRepository.deleteRecipe(recipeId)
         }
+    }
+
+    fun onPhotoSelected(context: Context, photosUri: List<Uri>) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val photoPaths = copyAndSavePhotos(context, photosUri)
+            val photos = photoPaths.map { path ->
+                RecipePhoto(
+                    uri = path,
+                )
+            }
+            _state.update { state ->
+                state.copy(
+                    recipe = state.recipe.copy(
+                        photos = buildList {
+                            addAll(state.recipe.photos)
+                            addAll(photos)
+                        }
+                    )
+                )
+            }
+        }
+    }
+
+    fun onPhotoClicked(photo: RecipePhoto) {
+
+    }
+
+    private fun copyAndSavePhotos(context: Context, uris: List<Uri>): List<String> {
+        return uris.map { sourceUri ->
+            val dest = createImageFile(context)
+            context.contentResolver.openInputStream(sourceUri)?.use { input ->
+                FileOutputStream(dest).use { output -> input.copyTo(output) }
+            }
+            dest.absolutePath
+        }
+    }
+
+    private fun createImageFile(context: Context): File {
+        val dir = context.filesDir.resolve("recipe_photos")
+        if (!dir.exists()) dir.mkdirs()
+        val fileId = UUID.randomUUID()
+        return File(dir, "IMG_$fileId.jpg")
     }
 
     private suspend fun addIngredient(productId: Long) {

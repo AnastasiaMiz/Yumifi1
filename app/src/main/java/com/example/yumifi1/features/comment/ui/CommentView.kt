@@ -124,9 +124,6 @@ private fun ContentComponent(
     Column(modifier = modifier.fillMaxSize()) {
         TextField(
             value = state.comment.text,
-            label = {
-                Text(text = stringResource(id = R.string.auth_email))
-            },
             onValueChange = viewModel::onTextChanged,
             readOnly = !state.isCommentOwnedUser || state.isLoading,
             modifier = Modifier.fillMaxWidth()

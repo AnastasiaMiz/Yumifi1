@@ -1,6 +1,7 @@
 package com.example.yumifi1.features.recipes.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,6 +18,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Create
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -25,11 +27,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.example.yumifi1.R
 import com.example.yumifi1.features.recipe_details.ui.model.Recipe
 
@@ -39,33 +46,60 @@ fun RecipeItemComponent(
     recipe: Recipe,
     onItemClicked: () -> Unit,
 ) {
-    Box(
+    Column(
         modifier = modifier
-            .aspectRatio(1f)
             .clip(RoundedCornerShape(4.dp))
+            .border(
+                width = 1.dp,
+                color = Color.LightGray,
+                shape = RoundedCornerShape(8.dp)
+            )
             .clickable(onClick = onItemClicked),
     ) {
+        Box(
+            modifier = modifier.aspectRatio(1f),
+        ) {
+            val recipePhoto = recipe.photos.firstOrNull()
+            if (recipePhoto == null) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Info,
+                        contentDescription = null,
+                        tint = Color.LightGray,
+                        modifier = Modifier.size(50.dp),
+                    )
+                }
+            } else {
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(recipePhoto.uri)
+                        .crossfade(true)
+                        .build(),
+                    modifier = Modifier.fillMaxSize(),
+                    placeholder = painterResource(R.drawable.logo_yumifi),
+                    error = painterResource(R.drawable.logo_yumifi),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                )
+            }
+        }
         Column(
             modifier = Modifier
                 .background(MaterialTheme.colorScheme.onPrimary)
-                .fillMaxSize()
+                .fillMaxWidth()
                 .padding(16.dp)
         ) {
             Text(
                 text = recipe.name,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Medium,
-                maxLines = 3,
+                maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
             Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = recipe.description,
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Normal,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.weight(1f),
-            )
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,

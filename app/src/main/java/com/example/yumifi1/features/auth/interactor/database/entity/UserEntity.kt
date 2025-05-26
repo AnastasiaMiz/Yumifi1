@@ -8,7 +8,6 @@ import androidx.room.Relation
 import com.example.yumifi1.features.comment.interactor.database.entity.CommentEntity
 import com.example.yumifi1.features.profile.ui.model.User
 import com.example.yumifi1.features.recipe_details.interactor.database.entity.RecipeEntity
-import com.example.yumifi1.features.recipe_details.interactor.database.entity.RecipeWithIngredients
 
 const val USER_TABLE = "users"
 

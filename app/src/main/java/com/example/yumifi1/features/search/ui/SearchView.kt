@@ -89,49 +89,57 @@ private fun ContentComponent(
 ) {
     val state by viewModel.state.collectAsState()
 
-    Column(
-        modifier = modifier.fillMaxSize()
-    ) {
-        if (state.recipes.isNotEmpty()) {
-            LazyRow(
-                modifier = modifier
-                    .fillMaxWidth()
-                    .height(200.dp)
-            ) {
-                if (state.recipes.isNotEmpty()) {
-                    item {
-                        Spacer(modifier = Modifier.width(16.dp))
-                    }
-                }
-                items(
-                    count = state.recipes.size
-                ) { index ->
-                    RecipeItemComponent(
-                        recipe = state.recipes[index],
-                        modifier = Modifier
-                            .padding(vertical = 16.dp)
-                            .padding(end = 16.dp),
-                        onItemClicked = {
-                            openNextView(Screen.RecipeDetails(
-                                recipeId = state.recipes[index].id
-                            ))
-                        }
-                    )
-                }
-            }
-            HorizontalDivider()
+    if (state.products.isEmpty()) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center,
+        ) {
+            Text(
+                text = stringResource(R.string.search_empty)
+            )
         }
-        LazyColumn(
+    } else {
+        Column(
             modifier = modifier.fillMaxSize()
         ) {
-            items(
-                count = state.products.size
-            ) { index ->
-                SelectableProductComponent(
-                    selectableData = state.products[index],
-                    modifier = modifier.fillMaxWidth(),
-                ) { item ->
-                    viewModel.onSelectProduct(item)
+            if (state.recipes.isNotEmpty()) {
+                LazyRow(
+                    modifier = modifier.fillMaxWidth()
+                ) {
+                    if (state.recipes.isNotEmpty()) {
+                        item {
+                            Spacer(modifier = Modifier.width(16.dp))
+                        }
+                    }
+                    items(
+                        count = state.recipes.size
+                    ) { index ->
+                        RecipeItemComponent(
+                            recipe = state.recipes[index],
+                            modifier = Modifier.width(200.dp),
+                            onItemClicked = {
+                                openNextView(Screen.RecipeDetails(
+                                    recipeId = state.recipes[index].id
+                                ))
+                            }
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+                HorizontalDivider()
+            }
+            LazyColumn(
+                modifier = modifier.fillMaxSize()
+            ) {
+                items(
+                    count = state.products.size
+                ) { index ->
+                    SelectableProductComponent(
+                        selectableData = state.products[index],
+                        modifier = modifier.fillMaxWidth(),
+                    ) { item ->
+                        viewModel.onSelectProduct(item)
+                    }
                 }
             }
         }

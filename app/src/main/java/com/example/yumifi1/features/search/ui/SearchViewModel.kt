@@ -31,11 +31,11 @@ class SearchViewModel @Inject constructor(
 
     init {
         state.onEach { value ->
-            val productsId = value.products
+            val productsName = value.products
                 .filter { it.isSelected }
-                .mapNotNull { it.product.id }
+                .map { it.product.name }
             val recipesFlow = recipeRepository.getRecipes(
-                productsId = productsId,
+                productsName = productsName,
             )
             searchJob?.cancel()
             searchJob = recipesFlow.onEach { recipes ->
