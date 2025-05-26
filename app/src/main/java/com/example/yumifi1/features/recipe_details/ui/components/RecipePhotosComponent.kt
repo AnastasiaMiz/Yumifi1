@@ -32,6 +32,7 @@ fun RecipePhotosComponent(
             Spacer(modifier = Modifier.width(16.dp))
             PhotoComponent(
                 photo = photos[index],
+                isMy = isMy,
                 onClicked = onPhotoClicked,
             )
         }
