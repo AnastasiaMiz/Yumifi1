@@ -16,6 +16,7 @@ import com.example.yumifi1.features.recipe_details.interactor.database.RecipeDao
 import com.example.yumifi1.features.recipe_details.interactor.database.entity.IngredientEntity
 import com.example.yumifi1.features.recipe_details.interactor.database.entity.RecipeWithContent
 import com.example.yumifi1.features.recipe_details.ui.model.Recipe
+import com.example.yumifi1.features.recipe_details.ui.model.RecipePhoto
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
@@ -138,6 +139,12 @@ class AuthRepository @Inject constructor(
             },
             comments = comments.map { entity ->
                 entity.mapToDomain(userId = userId)
+            },
+            photos = photos.map { entity ->
+                RecipePhoto(
+                    id = entity.id,
+                    uri = entity.uri,
+                )
             }
         )
 
